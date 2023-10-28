@@ -1,7 +1,7 @@
 name: on_process_button_widget
-description: A new Flutter package project.
+description: An awesome button widget that fulfills all your demands in Button. Operation animation, status, and many more.
 version: 0.0.1
-homepage:
+homepage: https://github.com/SHAJED99/on_process_button_widget
 
 environment:
   sdk: '>=3.1.3 <4.0.0'
@@ -15,5 +15,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-
-
