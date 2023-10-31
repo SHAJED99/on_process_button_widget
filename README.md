@@ -2,10 +2,12 @@
 
 A button with many functionalities
 
+![Example - on_process_button_widget](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/all.gif)
+
 
 ## Getting Started
 
-To use the `TimeRangeSelectorWidget` widget in your project, follow these steps:
+To use the `on_process_button_widget` widget in your project, follow these steps:
 
 1. Install the widget according to the instructions on the install page
 
