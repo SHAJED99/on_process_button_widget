@@ -42,7 +42,9 @@ class _MyAppState extends State<MyApp> {
                     OnProcessButtonWidget(
                       backgroundColor: const Color(0XFF86A789),
                       onTap: () async => await onCallFunction(),
-                      onHover: (isEnter) => buttonText.value = isEnter ? "Hi" : "Hover Here - Only works in Mouse hovering.",
+                      onHover: (isEnter) => buttonText.value = isEnter
+                          ? "Hi"
+                          : "Hover Here - Only works in Mouse hovering.",
                       child: Text(buttonText.value),
                     ),
                     _____spacing,
@@ -81,7 +83,10 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: const Text("Double process"),
                     ),
-                    if (processDone.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text("Process status: ${processDone.value}")),
+                    if (processDone.isNotEmpty)
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text("Process status: ${processDone.value}")),
                     _____spacing,
 
                     //! Shadow and Icon color can be changed
@@ -90,9 +95,13 @@ class _MyAppState extends State<MyApp> {
                       backgroundColor: const Color(0XFF3A4D39),
                       onTap: () async => await onCallFunction(type: false),
                       boxShadow: const [
-                        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
+                        BoxShadow(
+                            offset: Offset(0, 2),
+                            color: Colors.black54,
+                            blurRadius: 2)
                       ],
-                      child: const Text("My shadow and Icon color can be changed"),
+                      child:
+                          const Text("My shadow and Icon color can be changed"),
                     ),
                     _____spacing,
 
@@ -126,7 +135,10 @@ class _MyAppState extends State<MyApp> {
                       contentPadding: EdgeInsets.symmetric(vertical: 24),
                       backgroundColor: Color.fromARGB(255, 242, 242, 242),
                       boxShadow: [
-                        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
+                        BoxShadow(
+                            offset: Offset(0, 2),
+                            color: Colors.black54,
+                            blurRadius: 2)
                       ],
                       child: Text(
                         "I am a Button,\nBut I can be used as a card.",

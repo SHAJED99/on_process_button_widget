@@ -21,7 +21,8 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.width,
     this.isRunning = false,
     this.expanded = true,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+    this.contentPadding =
+        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     this.constraints = const BoxConstraints(minHeight: 48),
     this.iconHeight = 24,
     this.child,
@@ -145,9 +146,13 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   Widget child(BuildContext context) {
     Color c = widget.iconColor ?? Theme.of(context).canvasColor;
-    if (isRunning == _ButtonStatus.running) return widget.onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
-    if (isRunning == _ButtonStatus.success) return widget.onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
-    if (isRunning == _ButtonStatus.error) return widget.onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
+    if (isRunning == _ButtonStatus.running)
+      return widget.onRunningWidget ??
+          statusChild(CircularProgressIndicator(color: c));
+    if (isRunning == _ButtonStatus.success)
+      return widget.onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
+    if (isRunning == _ButtonStatus.error)
+      return widget.onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
 
     return widget.child ?? const SizedBox();
   }
@@ -155,7 +160,8 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   BoxDecoration boxDecoration() {
     BorderRadiusGeometry? borderRadius = widget.borderRadius;
 
-    if (widget.roundBorderWhenRunning && isRunning != _ButtonStatus.stable) borderRadius = BorderRadius.circular(100);
+    if (widget.roundBorderWhenRunning && isRunning != _ButtonStatus.stable)
+      borderRadius = BorderRadius.circular(100);
 
     return BoxDecoration(
       borderRadius: borderRadius,
@@ -209,30 +215,38 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 : () async {
                     if (!widget.enable) return;
                     if (isRunning != _ButtonStatus.stable) return;
-                    if (mounted) setState(() => isRunning = _ButtonStatus.running);
-                    if (widget.onStatusChange != null) widget.onStatusChange!(1); // Running = 1
+                    if (mounted)
+                      setState(() => isRunning = _ButtonStatus.running);
+                    if (widget.onStatusChange != null)
+                      widget.onStatusChange!(1); // Running = 1
                     if (widget.onTap != null) {
                       result = await widget.onTap!();
                       if (result != null) {
                         if (result! && mounted) {
                           setState(() => isRunning = _ButtonStatus.success);
-                          if (widget.onStatusChange != null) widget.onStatusChange!(2); // Success = 2
+                          if (widget.onStatusChange != null)
+                            widget.onStatusChange!(2); // Success = 2
                         }
                         if (!result! && mounted) {
                           setState(() => isRunning = _ButtonStatus.error);
-                          if (widget.onStatusChange != null) widget.onStatusChange!(-1); // Success = -1
+                          if (widget.onStatusChange != null)
+                            widget.onStatusChange!(-1); // Success = -1
                         }
                         await Future.delayed(widget.statusShowingDuration);
                       }
                     }
                     if (widget.onDone != null) {
-                      if (mounted) setState(() => isRunning = _ButtonStatus.running);
-                      if (widget.onStatusChange != null) widget.onStatusChange!(1);
+                      if (mounted)
+                        setState(() => isRunning = _ButtonStatus.running);
+                      if (widget.onStatusChange != null)
+                        widget.onStatusChange!(1);
                       await widget.onDone!(result);
                     }
 
-                    if (mounted) setState(() => isRunning = _ButtonStatus.stable);
-                    if (widget.onStatusChange != null) widget.onStatusChange!(0); // Stable
+                    if (mounted)
+                      setState(() => isRunning = _ButtonStatus.stable);
+                    if (widget.onStatusChange != null)
+                      widget.onStatusChange!(0); // Stable
                   },
             child: AnimatedSize(
               duration: widget.animationDuration,
@@ -243,7 +257,11 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 overflow: widget.textOverflow,
                 softWrap: widget.textWrap,
                 textWidthBasis: widget.textWidthBasis,
-                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).canvasColor, fontWeight: FontWeight.bold) ?? const TextStyle(),
+                style: widget.textStyle ??
+                    Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).canvasColor,
+                        fontWeight: FontWeight.bold) ??
+                    const TextStyle(),
                 child: Container(
                   height: widget.height,
                   width: widget.width,
@@ -267,9 +285,4 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 }
 
-enum _ButtonStatus {
-  stable,
-  running,
-  success,
-  error
-}
+enum _ButtonStatus { stable, running, success, error }
