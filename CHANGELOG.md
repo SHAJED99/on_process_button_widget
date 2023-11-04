@@ -5,3 +5,7 @@
 ## 1.0.0
 
 * Documentation updated
+
+## 1.0.1
+
+* Material 3 is integrated

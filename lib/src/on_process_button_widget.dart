@@ -62,6 +62,8 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.textMaxLines,
     this.textWrap = true,
     this.textWidthBasis = TextWidthBasis.parent,
+    this.useMaterial3 = true,
+    this.fontColor,
   });
 
   /// Button clickable. Default true
@@ -235,6 +237,12 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Button state controller
   final MaterialStatesController? statesController;
 
+  /// Use material 3
+  final bool useMaterial3;
+
+  /// Font color
+  final Color? fontColor;
+
   @override
   State<OnProcessButtonWidget> createState() => _OnProcessButtonWidgetState();
 }
@@ -258,7 +266,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   Widget child(BuildContext context) {
-    Color c = widget.iconColor ?? Theme.of(context).canvasColor;
+    Color c = widget.iconColor ??
+        (widget.useMaterial3
+            ? Theme.of(context).colorScheme.onPrimary
+            : Theme.of(context).canvasColor);
     if (isRunning == _ButtonStatus.running) {
       return widget.onRunningWidget ??
           statusChild(CircularProgressIndicator(color: c));
@@ -303,7 +314,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         clipBehavior: Clip.antiAlias,
         decoration: boxDecoration(),
         child: Material(
-          color: widget.backgroundColor ?? Theme.of(context).primaryColor,
+          color: widget.backgroundColor ??
+              (widget.useMaterial3
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).primaryColor),
           child: InkWell(
             onLongPress: widget.onLongPress,
             onTapUp: widget.onTapUp,
@@ -384,7 +398,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 textWidthBasis: widget.textWidthBasis,
                 style: widget.textStyle ??
                     Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).canvasColor,
+                        color: widget.fontColor ??
+                            (widget.useMaterial3
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).primaryColor),
                         fontWeight: FontWeight.bold) ??
                     const TextStyle(),
                 child: Container(
