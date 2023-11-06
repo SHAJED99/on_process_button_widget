@@ -9,3 +9,8 @@
 ## 1.0.1
 
 * Material 3 is integrated
+
+
+## 1.0.2
+
+* Bug fixed
