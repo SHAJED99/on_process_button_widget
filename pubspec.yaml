@@ -1,6 +1,6 @@
 name: on_process_button_widget
 description: An awesome button widget that fulfills all your demands in Button. Operation animation, status, and many more.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/SHAJED99/on_process_button_widget
 license: BSD 3-Clause
 
@@ -16,7 +16,7 @@ topics:
 
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:

@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class OnProcessButtonWidget extends StatefulWidget {
   const OnProcessButtonWidget({
-    super.key,
+    Key? key,
     this.enable = true,
     this.animationDuration = const Duration(milliseconds: 500),
     this.margin,
@@ -23,8 +25,8 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.expanded = true,
     this.contentPadding =
         const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-    this.constraints = const BoxConstraints(minHeight: 48),
-    this.iconHeight = 24,
+    this.constraints,
+    this.iconHeight,
     this.child,
     this.expandedIcon = false,
     this.alignment = Alignment.center,
@@ -64,31 +66,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.textWidthBasis = TextWidthBasis.parent,
     this.useMaterial3 = true,
     this.fontColor,
-  });
-
-  /// Button clickable. Default true
-  final bool enable;
-
-  /// Animation Duration
-  final Duration animationDuration;
-
-  /// Margin
-  final EdgeInsetsGeometry? margin;
-
-  /// Make the shape circular when processing
-  final bool roundBorderWhenRunning;
-
-  /// Border radius
-  final BorderRadius borderRadius;
-
-  /// Button border
-  final BoxBorder? border;
-
-  /// Button shadow
-  final List<BoxShadow>? boxShadow;
-
-  /// Button background color. Default color Theme.of(context).primaryColor
-  final Color? backgroundColor;
+  }) : super(key: key);
 
   /// Callback function for long press
   final void Function()? onLongPress;
@@ -99,53 +77,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for pressing
   final Future<bool?>? Function()? onTap;
 
-  /// Status showing duration
-  final Duration statusShowingDuration;
-
   /// Callback function. It is called when the onTap is done
   final Function(bool? isSuccess)? onDone;
-
-  /// Button height. Try to avoid static height. Use constraints instead
-  final double? height;
-
-  /// Button widget
-  final double? width;
-
-  /// If the app is doing some work and wants to show a loading indicator, use this with the passing key
-  final bool isRunning;
-
-  /// Button width is expanded or not
-  final bool expanded;
-
-  /// Button padding
-  final EdgeInsetsGeometry? contentPadding;
-
-  /// Button constraints
-  final BoxConstraints? constraints;
-
-  /// Button icon height
-  final double iconHeight;
-
-  /// Button child
-  final Widget? child;
-
-  /// On processing and status showing indicator is expanded or not
-  final bool? expandedIcon;
-
-  /// Child alignment
-  final AlignmentGeometry alignment;
-
-  /// On running widget. Default widget CircularProgressIndicator()
-  final Widget? onRunningWidget;
-
-  /// On success widget. Default widget Icon(Icons.done)
-  final Widget? onSuccessWidget;
-
-  /// On error widget. Default widget Icon(Icons.error)
-  final Widget? onErrorWidget;
-
-  /// Icon color. Default color Theme.of(context).canvasColor
-  final Color? iconColor;
 
   /// Callback function for tapping up
   final void Function(TapUpDetails tapUpDetails)? onTapUp;
@@ -156,56 +89,11 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for cancelling tap
   final void Function()? onTapCancel;
 
-  /// Button auto focus
-  final bool autofocus;
-
-  /// Splash color
-  final Color? splashColor;
-
-  /// Button pressing feedback showing
-  final bool enableFeedback;
-
-  /// Button text style. Default Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).canvasColor, fontWeight: FontWeight.bold)
-  final TextStyle? textStyle;
-
-  /// Button text alignment
-  final TextAlign textAlign;
-
-  /// Button text overflow
-  final TextOverflow textOverflow;
-
-  /// Button text wrap
-  final bool textWrap;
-
-  /// Button text width basis
-  final TextWidthBasis textWidthBasis;
-
-  /// Button text height behavior
-  final TextHeightBehavior? textHeightBehavior;
-
-  /// Button text max line
-  final int? textMaxLines;
-
   /// Callback function showing hovering status
   final Function(bool isEnter)? onHover;
 
   /// Callback function showing hovering offset
   final void Function(PointerHoverEvent offset)? onHovering;
-
-  /// Button focus Node
-  final FocusNode? focusNode;
-
-  /// Button focus color
-  final Color? focusColor;
-
-  /// Button highlight color
-  final Color? highlightColor;
-
-  /// Button hover color
-  final Color? hoverColor;
-
-  /// Button mouse cursor
-  final MouseCursor? mouseCursor;
 
   /// Callback function for double tap
   final void Function()? onDoubleTap;
@@ -228,8 +116,117 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for Secondary Tap cancel
   final void Function()? onSecondaryTapCancel;
 
+  /// Child alignment
+  final AlignmentGeometry alignment;
+
+  /// Animation Duration.
+  /// Default:
+  ///   Duration(milliseconds: 500
+  final Duration animationDuration;
+
+  /// Button auto focus
+  final bool autofocus;
+
+  /// Button background color
+  /// Default:
+  ///   Theme.of(context).primaryColor
+  final Color? backgroundColor;
+
+  /// Button border
+  final BoxBorder? border;
+
+  /// Border radius.
+  /// Default:
+  ///   BorderRadius.all(Radius.circular(8))
+  final BorderRadius borderRadius;
+
+  /// Button shadow
+  final List<BoxShadow>? boxShadow;
+
+  /// Button child
+  final Widget? child;
+
+  /// Button constraints.
+  /// Default:
+  ///   BoxConstraints(minHeight: Theme.of(context).buttonTheme.height)
+  final BoxConstraints? constraints;
+
+  /// Button padding.
+  /// Default:
+  ///   EdgeInsets.symmetric(horizontal: 12, vertical: 4)
+  final EdgeInsetsGeometry? contentPadding;
+
+  /// Button clickable.
+  /// Default true
+  final bool enable;
+
+  /// Button pressing feedback showing
+  final bool enableFeedback;
+
+  /// Button width is expanded or not
+  final bool expanded;
+
+  /// On processing and status showing indicator is expanded or not
+  final bool? expandedIcon;
+
+  /// Button focus color
+  final Color? focusColor;
+
+  /// Button focus Node
+  final FocusNode? focusNode;
+
+  /// Font color
+  final Color? fontColor;
+
+  /// Button height. Try to avoid static height. Use constraints instead
+  final double? height;
+
+  /// Button highlight color
+  final Color? highlightColor;
+
+  /// Button hover color
+  final Color? hoverColor;
+
+  /// Icon color.
+  /// Default:
+  ///   Theme.of(context).canvasColor
+  final Color? iconColor;
+
+  /// Button icon height
+  final double? iconHeight;
+
+  /// If the app is doing some work and wants to show a loading indicator, use this with the passing key
+  final bool isRunning;
+
+  /// Margin
+  final EdgeInsetsGeometry? margin;
+
+  /// Button mouse cursor
+  final MouseCursor? mouseCursor;
+
+  /// On error widget.
+  /// Default:
+  ///   Icon(Icons.error)
+  final Widget? onErrorWidget;
+
+  /// On running widget.
+  /// Default:
+  ///   CircularProgressIndicator()
+  final Widget? onRunningWidget;
+
+  /// On success widget.
+  /// Default:
+  ///   Icon(Icons.done)
+  final Widget? onSuccessWidget;
+
   /// Button overlay color
   final MaterialStateProperty<Color?>? overlayColor;
+
+  /// Make the shape circular when processing
+  final bool roundBorderWhenRunning;
+
+  /// Splash color
+  final Color? splashColor;
 
   /// Button splashFactory
   final InteractiveInkFeatureFactory? splashFactory;
@@ -237,11 +234,39 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Button state controller
   final MaterialStatesController? statesController;
 
+  /// Status showing duration.
+  /// Default:
+  ///   Duration(seconds: 2)
+  final Duration statusShowingDuration;
+
+  /// Button text alignment
+  final TextAlign textAlign;
+
+  /// Button text height behavior
+  final TextHeightBehavior? textHeightBehavior;
+
+  /// Button text max line
+  final int? textMaxLines;
+
+  /// Button text overflow
+  final TextOverflow textOverflow;
+
+  /// Button text style.
+  /// Default:
+  ///   Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).canvasColor, fontWeight: FontWeight.bold)
+  final TextStyle? textStyle;
+
+  /// Button text width basis
+  final TextWidthBasis textWidthBasis;
+
+  /// Button text wrap
+  final bool textWrap;
+
   /// Use material 3
   final bool useMaterial3;
 
-  /// Font color
-  final Color? fontColor;
+  /// Button widget
+  final double? width;
 
   @override
   State<OnProcessButtonWidget> createState() => _OnProcessButtonWidgetState();
@@ -258,10 +283,19 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   Widget statusChild(Widget c) {
-    return SizedBox(
-      height: widget.iconHeight,
-      width: widget.iconHeight,
-      child: FittedBox(child: c),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            maxHeight: widget.iconHeight ?? 24,
+            maxWidth: widget.iconHeight ?? 24,
+          ),
+          height: widget.iconHeight ?? ____contentHeight,
+          width: widget.iconHeight ?? ____contentHeight,
+          child: FittedBox(child: c),
+        ),
+      ],
     );
   }
 
@@ -288,7 +322,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     BorderRadiusGeometry? borderRadius = widget.borderRadius;
 
     if (widget.roundBorderWhenRunning && isRunning != _ButtonStatus.stable) {
-      borderRadius = BorderRadius.circular(100);
+      borderRadius = BorderRadius.circular(10000000);
     }
 
     return BoxDecoration(
@@ -297,6 +331,36 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
       boxShadow: widget.boxShadow,
       color: widget.boxShadow == null ? null : Colors.white,
     );
+  }
+
+  double get _____buttonConstraints {
+    var c = widget.constraints ??
+        BoxConstraints(minHeight: Theme.of(context).buttonTheme.height);
+    return min(c.minHeight, c.minHeight);
+  }
+
+  double get ____contentHeight {
+    double f =
+        _____buttonConstraints - ((widget.contentPadding?.vertical ?? 0) * 2);
+    double fontSize =
+        (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)
+                ?.fontSize ??
+            0;
+    double height =
+        (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.height ??
+            0;
+    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) -
+        MediaQuery.of(context).textScaler.scale(height);
+    if (f < fontSize) f = fontSize;
+    return f;
+  }
+
+  EdgeInsetsGeometry? get _____padding {
+    if (isRunning != _ButtonStatus.stable) {
+      return EdgeInsets.all((widget.contentPadding?.vertical) ?? 0);
+    }
+
+    return widget.contentPadding;
   }
 
   @override
@@ -407,8 +471,11 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 child: Container(
                   height: widget.height,
                   width: widget.width,
-                  padding: widget.contentPadding,
-                  constraints: widget.constraints,
+                  padding: _____padding,
+                  constraints: widget.constraints ??
+                      BoxConstraints(
+                          minWidth: _____buttonConstraints,
+                          minHeight: _____buttonConstraints),
                   alignment: isRunning == _ButtonStatus.stable
                       ? widget.expanded
                           ? widget.alignment

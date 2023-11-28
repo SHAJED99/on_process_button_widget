@@ -5,6 +5,9 @@ A button with many functionalities
 ![Example - on_process_button_widget](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/all.gif)
 
 
+### NOTE
+Now Material 3 theme is enabled.
+
 ## Getting Started
 
 To use the `on_process_button_widget` widget in your project, follow these steps:

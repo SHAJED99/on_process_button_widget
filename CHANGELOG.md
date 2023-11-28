@@ -10,7 +10,10 @@
 
 * Material 3 is integrated
 
-
 ## 1.0.2
 
 * Bug fixed
+
+## 1.0.3
+
+* Fixed box height problem
