@@ -45,6 +45,7 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     //! Hovering effect && On processing loading indicator
                     OnProcessButtonWidget(
+                      expanded: false,
                       backgroundColor: const Color(0XFF86A789),
                       onTap: () async => await onCallFunction(),
                       onHover: (isEnter) => buttonText.value = isEnter

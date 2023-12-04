@@ -17,3 +17,7 @@
 ## 1.0.3
 
 * Fixed box height problem
+
+## 2.0.0
+
+* Fixed box alignment problem

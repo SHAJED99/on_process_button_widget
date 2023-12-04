@@ -483,7 +483,14 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                       : widget.expandedIcon ?? widget.expanded
                           ? widget.alignment
                           : null,
-                  child: child(context),
+                  child: widget.expanded
+                      ? child(context)
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            child(context),
+                          ],
+                        ),
                 ),
               ),
             ),
