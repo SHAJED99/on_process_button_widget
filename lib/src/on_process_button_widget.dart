@@ -66,6 +66,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.textWidthBasis = TextWidthBasis.parent,
     this.useMaterial3 = true,
     this.fontColor,
+    this.animationAlignment = Alignment.center,
   }) : super(key: key);
 
   /// Callback function for long press
@@ -118,6 +119,9 @@ class OnProcessButtonWidget extends StatefulWidget {
 
   /// Child alignment
   final AlignmentGeometry alignment;
+
+  /// Animation Alignment
+  final AlignmentGeometry animationAlignment;
 
   /// Animation Duration.
   /// Default:
@@ -452,6 +456,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                     }
                   },
             child: AnimatedSize(
+              alignment: widget.animationAlignment,
               duration: widget.animationDuration,
               child: DefaultTextStyle(
                 textAlign: widget.textAlign,

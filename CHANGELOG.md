@@ -21,3 +21,7 @@
 ## 2.0.0
 
 * Fixed box alignment problem
+
+## 2.0.1
+
+* Animation alignment added
