@@ -23,8 +23,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.width,
     this.isRunning = false,
     this.expanded = true,
-    this.contentPadding =
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     this.constraints,
     this.iconHeight,
     this.child,
@@ -287,30 +286,32 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   Widget statusChild(Widget c) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: widget.iconHeight ?? 24,
-            maxWidth: widget.iconHeight ?? 24,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: widget.iconHeight ?? 24,
+              maxWidth: widget.iconHeight ?? 24,
+            ),
+            height: widget.iconHeight ?? ____contentHeight,
+            width: widget.iconHeight ?? ____contentHeight,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: c,
+            ),
           ),
-          height: widget.iconHeight ?? ____contentHeight,
-          width: widget.iconHeight ?? ____contentHeight,
-          child: FittedBox(child: c),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget child(BuildContext context) {
-    Color c = widget.iconColor ??
-        (widget.useMaterial3
-            ? Theme.of(context).colorScheme.onPrimary
-            : Theme.of(context).canvasColor);
+    Color c = widget.iconColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).canvasColor);
     if (isRunning == _ButtonStatus.running) {
-      return widget.onRunningWidget ??
-          statusChild(CircularProgressIndicator(color: c));
+      return widget.onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
     }
     if (isRunning == _ButtonStatus.success) {
       return widget.onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
@@ -338,23 +339,15 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   double get _____buttonConstraints {
-    var c = widget.constraints ??
-        BoxConstraints(minHeight: Theme.of(context).buttonTheme.height);
+    var c = widget.constraints ?? BoxConstraints(minHeight: Theme.of(context).buttonTheme.height);
     return min(c.minHeight, c.minHeight);
   }
 
   double get ____contentHeight {
-    double f =
-        _____buttonConstraints - ((widget.contentPadding?.vertical ?? 0) * 2);
-    double fontSize =
-        (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)
-                ?.fontSize ??
-            0;
-    double height =
-        (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.height ??
-            0;
-    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) -
-        MediaQuery.of(context).textScaler.scale(height);
+    double f = _____buttonConstraints - ((widget.contentPadding?.vertical ?? 0) * 2);
+    double fontSize = (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.fontSize ?? 0;
+    double height = (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.height ?? 0;
+    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) - MediaQuery.of(context).textScaler.scale(height);
     if (f < fontSize) f = fontSize;
     return f;
   }
@@ -382,10 +375,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         clipBehavior: Clip.antiAlias,
         decoration: boxDecoration(),
         child: Material(
-          color: widget.backgroundColor ??
-              (widget.useMaterial3
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).primaryColor),
+          color: widget.backgroundColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor),
           child: InkWell(
             onLongPress: widget.onLongPress,
             onTapUp: widget.onTapUp,
@@ -465,22 +455,12 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 overflow: widget.textOverflow,
                 softWrap: widget.textWrap,
                 textWidthBasis: widget.textWidthBasis,
-                style: widget.textStyle ??
-                    Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: widget.fontColor ??
-                            (widget.useMaterial3
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).primaryColor),
-                        fontWeight: FontWeight.bold) ??
-                    const TextStyle(),
+                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: widget.fontColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).primaryColor), fontWeight: FontWeight.bold) ?? const TextStyle(),
                 child: Container(
                   height: widget.height,
                   width: widget.width,
                   padding: _____padding,
-                  constraints: widget.constraints ??
-                      BoxConstraints(
-                          minWidth: _____buttonConstraints,
-                          minHeight: _____buttonConstraints),
+                  constraints: widget.constraints ?? BoxConstraints(minWidth: _____buttonConstraints, minHeight: _____buttonConstraints),
                   alignment: isRunning == _ButtonStatus.stable
                       ? widget.expanded
                           ? widget.alignment
@@ -506,4 +486,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 }
 
-enum _ButtonStatus { stable, running, success, error }
+enum _ButtonStatus {
+  stable,
+  running,
+  success,
+  error
+}
