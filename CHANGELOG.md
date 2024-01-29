@@ -25,3 +25,7 @@
 ## 2.0.1
 
 * Animation alignment added
+
+## 2.0.2
+
+* Sized error refactored
