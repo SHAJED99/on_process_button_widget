@@ -332,14 +332,16 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     BorderRadiusGeometry? borderRadius = widget.borderRadius;
 
     if (widget.roundBorderWhenRunning && isRunning != _ButtonStatus.stable) {
-      borderRadius = BorderRadius.circular(10000000);
+      borderRadius = BorderRadius.circular(MediaQuery.of(context).size.height);
     }
 
     return BoxDecoration(
       borderRadius: borderRadius,
       border: widget.border,
       boxShadow: widget.boxShadow,
-      color: widget.boxShadow == null ? null : Colors.white,
+      color: widget.boxShadow == null
+          ? null
+          : Theme.of(context).colorScheme.background,
     );
   }
 

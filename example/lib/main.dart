@@ -32,7 +32,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.red, brightness: Brightness.dark),
         buttonTheme: const ButtonThemeData(height: 100),
       ),
       home: Scaffold(
@@ -76,7 +77,7 @@ class _MyAppState extends State<MyApp> {
 
                     //! Double process
                     OnProcessButtonWidget(
-                      backgroundColor: const Color(0XFF4F6F52),
+                      backgroundColor: const Color(0XFF4F6F52).withOpacity(0.5),
                       onTap: () async {
                         processDone.value = "Running first task.";
                         var s = await onCallFunction(type: true);
