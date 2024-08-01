@@ -29,3 +29,11 @@
 ## 2.0.2
 
 * Sized error refactored
+
+## 2.0.3
+
+* Color and shadow error refactored
+
+## 2.0.4
+
+* Deprecated properties fixed

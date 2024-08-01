@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.red, brightness: Brightness.dark),
-        buttonTheme: const ButtonThemeData(height: 100),
+        // buttonTheme: const ButtonThemeData(height: 100),
       ),
       home: Scaffold(
         body: SafeArea(
@@ -168,8 +168,10 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: FittedBox(
                           child: Icon(Icons.done,
-                              color: Theme.of(context).colorScheme.background)),
-                    )
+                              color: Theme.of(context).colorScheme.surface)),
+                    ),
+
+                    const OnProcessButtonWidget(),
                   ],
                 ),
               ),

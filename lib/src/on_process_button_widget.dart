@@ -224,7 +224,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final Widget? onSuccessWidget;
 
   /// Button overlay color
-  final MaterialStateProperty<Color?>? overlayColor;
+  final WidgetStateProperty<Color?>? overlayColor;
 
   /// Make the shape circular when processing
   final bool roundBorderWhenRunning;
@@ -236,7 +236,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final InteractiveInkFeatureFactory? splashFactory;
 
   /// Button state controller
-  final MaterialStatesController? statesController;
+  final WidgetStatesController? statesController;
 
   /// Status showing duration.
   /// Default:
@@ -341,7 +341,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
       boxShadow: widget.boxShadow,
       color: widget.boxShadow == null
           ? null
-          : Theme.of(context).colorScheme.background,
+          : Theme.of(context).colorScheme.surface,
     );
   }
 
