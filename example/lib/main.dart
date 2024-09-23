@@ -32,8 +32,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.red, brightness: Brightness.dark),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark),
         // buttonTheme: const ButtonThemeData(height: 100),
       ),
       home: Scaffold(
@@ -171,7 +170,27 @@ class _MyAppState extends State<MyApp> {
                               color: Theme.of(context).colorScheme.surface)),
                     ),
 
-                    const OnProcessButtonWidget(),
+                    Row(
+                      children: [
+                        Container(
+                          height: Theme.of(context).buttonTheme.height,
+                          width: 24,
+                          color: Colors.blue,
+                        ),
+                        OnProcessButtonWidget(
+                          borderRadius: BorderRadius.circular(0),
+                          border: Border.all(
+                              width: 2,
+                              color: Colors.red,
+                              strokeAlign: BorderSide.strokeAlignOutside),
+                          onTap: () async {
+                            await Future.delayed(const Duration(seconds: 2));
+                            return;
+                          },
+                          child: const Text("Press Me"),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

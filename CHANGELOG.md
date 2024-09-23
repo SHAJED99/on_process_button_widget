@@ -37,3 +37,7 @@
 ## 2.0.4
 
 * Deprecated properties fixed
+
+## 2.0.5
+
+* Border fixed

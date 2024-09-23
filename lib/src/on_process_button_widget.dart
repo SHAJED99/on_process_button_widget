@@ -347,7 +347,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   double get _____buttonConstraints {
     var c = widget.constraints ??
-        BoxConstraints(minHeight: Theme.of(context).buttonTheme.height);
+        BoxConstraints(
+            minHeight: Theme.of(context).buttonTheme.height -
+                (widget.border?.top.width ?? 0) -
+                (widget.border?.bottom.width ?? 0));
     return min(c.minHeight, c.minHeight);
   }
 
