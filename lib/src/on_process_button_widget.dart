@@ -53,11 +53,11 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.onHighlightChanged,
     this.onSecondaryTap,
     this.onSecondaryTapCancel,
-    this.overlayColor,
+    // this.overlayColor,
     this.onSecondaryTapUp,
     this.onSecondaryTapDown,
     this.splashFactory,
-    this.statesController,
+    // this.statesController,
     this.textAlign = TextAlign.center,
     this.textOverflow = TextOverflow.clip,
     this.textHeightBehavior,
@@ -223,8 +223,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   ///   Icon(Icons.done)
   final Widget? onSuccessWidget;
 
-  /// Button overlay color
-  final WidgetStateProperty<Color?>? overlayColor;
+  // /// Button overlay color
+  // final WidgetStateProperty<Color?>? overlayColor;
 
   /// Make the shape circular when processing
   final bool roundBorderWhenRunning;
@@ -235,8 +235,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Button splashFactory
   final InteractiveInkFeatureFactory? splashFactory;
 
-  /// Button state controller
-  final WidgetStatesController? statesController;
+  // /// Button state controller
+  // final WidgetStatesController? statesController;
 
   /// Status showing duration.
   /// Default:
@@ -417,9 +417,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
             onSecondaryTapUp: widget.onSecondaryTapUp,
             onSecondaryTapDown: widget.onSecondaryTapDown,
             onSecondaryTapCancel: widget.onSecondaryTapCancel,
-            overlayColor: widget.overlayColor,
+            // overlayColor: widget.overlayColor,
             splashFactory: widget.splashFactory,
-            statesController: widget.statesController,
+            // statesController: widget.statesController,
             onTap: !widget.enable
                 ? null
                 : () async {

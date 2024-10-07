@@ -41,3 +41,7 @@
 ## 2.0.5
 
 * Border fixed
+
+## 2.0.6
+
+* Some flutter version error fixed
