@@ -372,7 +372,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   EdgeInsetsGeometry? get _____padding {
     if (isRunning != _ButtonStatus.stable) {
-      return EdgeInsets.all((widget.contentPadding?.vertical) ?? 0);
+      return EdgeInsets.all((widget.contentPadding?.vertical ?? 0) / 2);
     }
 
     return widget.contentPadding;

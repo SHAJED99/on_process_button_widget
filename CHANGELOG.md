@@ -1,47 +1,51 @@
 ## 0.0.1
 
-* Elevated Button with animation and many functionalities
+- Elevated Button with animation and many functionalities
 
 ## 1.0.0
 
-* Documentation updated
+- Documentation updated
 
 ## 1.0.1
 
-* Material 3 is integrated
+- Material 3 is integrated
 
 ## 1.0.2
 
-* Bug fixed
+- Bug fixed
 
 ## 1.0.3
 
-* Fixed box height problem
+- Fixed box height problem
 
 ## 2.0.0
 
-* Fixed box alignment problem
+- Fixed box alignment problem
 
 ## 2.0.1
 
-* Animation alignment added
+- Animation alignment added
 
 ## 2.0.2
 
-* Sized error refactored
+- Sized error refactored
 
 ## 2.0.3
 
-* Color and shadow error refactored
+- Color and shadow error refactored
 
 ## 2.0.4
 
-* Deprecated properties fixed
+- Deprecated properties fixed
 
 ## 2.0.5
 
-* Border fixed
+- Border fixed
 
 ## 2.0.6
 
-* Some flutter version error fixed
+- Some flutter version error fixed
+
+## 2.0.7
+
+- Button Icon height fixed
