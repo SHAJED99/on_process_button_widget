@@ -3,7 +3,7 @@ part of '../on_process_button_widget.dart';
 class OnProcessButtonWidget extends StatefulWidget {
   const OnProcessButtonWidget({
     Key? key,
-    this.enable = true,
+    this.enable,
     this.animationDuration = const Duration(milliseconds: 500),
     this.margin,
     this.roundBorderWhenRunning = true,
@@ -19,7 +19,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.height,
     this.width,
     this.isRunning = false,
-    this.expanded = true,
+    this.expanded,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     this.constraints,
     this.iconHeight,
@@ -60,7 +60,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.textMaxLines,
     this.textWrap = true,
     this.textWidthBasis = TextWidthBasis.parent,
-    this.useMaterial3 = true,
+    this.useMaterial3,
     this.fontColor,
     this.animationAlignment = Alignment.center,
   }) : super(key: key);
@@ -72,7 +72,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final Function(int i)? onStatusChange;
 
   /// Callback function for pressing
-  final Future<bool?>? Function()? onTap;
+  final Future<bool?> Function()? onTap;
 
   /// Callback function. It is called when the onTap is done
   final Function(bool? isSuccess)? onDone;
@@ -158,13 +158,13 @@ class OnProcessButtonWidget extends StatefulWidget {
 
   /// Button clickable.
   /// Default true
-  final bool enable;
+  final bool? enable;
 
   /// Button pressing feedback showing
   final bool enableFeedback;
 
   /// Button width is expanded or not
-  final bool expanded;
+  final bool? expanded;
 
   /// On processing and status showing indicator is expanded or not
   final bool? expandedIcon;
@@ -263,7 +263,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final bool textWrap;
 
   /// Use material 3
-  final bool useMaterial3;
+  final bool? useMaterial3;
 
   /// Button widget
   final double? width;
@@ -276,10 +276,51 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late _ButtonStatus isRunning;
   bool? result;
 
+  late final void Function()? onLongPress;
+  late final Function(int i)? onStatusChange;
+  late final Future<bool?> Function()? onTap;
+  late final Function(bool? isSuccess)? onDone;
+  late final void Function(TapUpDetails tapUpDetails)? onTapUp;
+  late final void Function(TapDownDetails tapDownDetails)? onTapDown;
+  late final void Function()? onTapCancel;
+  late final void Function(bool isEnter)? onHover;
+  late final void Function(PointerHoverEvent offset)? onHovering;
+  late final void Function()? onDoubleTap;
+  late final void Function(bool isFocused)? onFocusChange;
+  late final void Function(bool isHighlighted)? onHighlightChanged;
+  late final void Function()? onSecondaryTap;
+  late final void Function()? onSecondaryTapCancel;
+  late final void Function(TapUpDetails tapUpDetails)? onSecondaryTapUp;
+  late final void Function(TapDownDetails tapDownDetails)? onSecondaryTapDown;
+  late final bool useMaterial3;
+  late final bool expanded;
+  late final bool? expandedIcon;
+  late final bool enable;
+
   @override
   void initState() {
     super.initState();
     isRunning = widget.isRunning ? _ButtonStatus.running : _ButtonStatus.stable;
+
+    onLongPress = widget.onLongPress ?? OnProcessButtonDefaultValues.onLongPress;
+    onStatusChange = widget.onStatusChange ?? OnProcessButtonDefaultValues.onStatusChange;
+    onTap = widget.onTap ?? OnProcessButtonDefaultValues.onTap;
+    onDone = widget.onDone ?? OnProcessButtonDefaultValues.onDone;
+    onTapUp = widget.onTapUp ?? OnProcessButtonDefaultValues.onTapUp;
+    onTapDown = widget.onTapDown ?? OnProcessButtonDefaultValues.onTapDown;
+    onTapCancel = widget.onTapCancel ?? OnProcessButtonDefaultValues.onTapCancel;
+    onHovering = widget.onHovering ?? OnProcessButtonDefaultValues.onHovering;
+    onDoubleTap = widget.onDoubleTap ?? OnProcessButtonDefaultValues.onDoubleTap;
+    onFocusChange = widget.onFocusChange ?? OnProcessButtonDefaultValues.onFocusChange;
+    onHighlightChanged = widget.onHighlightChanged ?? OnProcessButtonDefaultValues.onHighlightChanged;
+    onSecondaryTap = widget.onSecondaryTap ?? OnProcessButtonDefaultValues.onSecondaryTap;
+    onSecondaryTapCancel = widget.onSecondaryTapCancel ?? OnProcessButtonDefaultValues.onSecondaryTapCancel;
+    onSecondaryTapUp = widget.onSecondaryTapUp ?? OnProcessButtonDefaultValues.onSecondaryTapUp;
+    onSecondaryTapDown = widget.onSecondaryTapDown ?? OnProcessButtonDefaultValues.onSecondaryTapDown;
+    useMaterial3 = widget.useMaterial3 ?? OnProcessButtonDefaultValues.useMaterial3 ?? true;
+    expanded = widget.expanded ?? OnProcessButtonDefaultValues.expanded ?? true;
+    expandedIcon = widget.expandedIcon ?? OnProcessButtonDefaultValues.expandedIcon;
+    enable = widget.enable ?? OnProcessButtonDefaultValues.enable ?? true;
   }
 
   Widget statusChild(Widget c) {
@@ -306,7 +347,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   Widget child(BuildContext context) {
-    Color c = widget.iconColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).canvasColor);
+    Color c = widget.iconColor ?? (useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).canvasColor);
     if (isRunning == _ButtonStatus.running) {
       return widget.onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
     }
@@ -361,23 +402,23 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) {
-        if (widget.onHover != null) widget.onHover!(true);
+        if (onHover != null) onHover!(true);
       },
       onExit: (_) {
-        if (widget.onHover != null) widget.onHover!(false);
+        if (onHover != null) onHover!(false);
       },
-      onHover: widget.onHovering,
+      onHover: onHovering,
       child: Container(
         margin: widget.margin,
         clipBehavior: Clip.antiAlias,
         decoration: boxDecoration(),
         child: Material(
-          color: widget.backgroundColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor),
+          color: widget.backgroundColor ?? (useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor),
           child: InkWell(
-            onLongPress: widget.onLongPress ?? OnProcessButtonDefaultValues.onLongPress,
-            onTapUp: widget.onTapUp,
-            onTapDown: widget.onTapDown,
-            onTapCancel: widget.onTapCancel,
+            onLongPress: onLongPress,
+            onTapUp: onTapUp,
+            onTapDown: onTapDown,
+            onTapCancel: onTapCancel,
             autofocus: widget.autofocus,
             splashColor: widget.splashColor,
             enableFeedback: widget.enableFeedback,
@@ -386,60 +427,60 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
             highlightColor: widget.highlightColor,
             hoverColor: widget.hoverColor,
             mouseCursor: widget.mouseCursor,
-            onDoubleTap: widget.onDoubleTap,
-            onFocusChange: widget.onFocusChange,
-            onHighlightChanged: widget.onHighlightChanged,
-            onSecondaryTap: widget.onSecondaryTap,
-            onSecondaryTapUp: widget.onSecondaryTapUp,
-            onSecondaryTapDown: widget.onSecondaryTapDown,
-            onSecondaryTapCancel: widget.onSecondaryTapCancel,
+            onDoubleTap: onDoubleTap,
+            onFocusChange: onFocusChange,
+            onHighlightChanged: onHighlightChanged,
+            onSecondaryTap: onSecondaryTap,
+            onSecondaryTapUp: onSecondaryTapUp,
+            onSecondaryTapDown: onSecondaryTapDown,
+            onSecondaryTapCancel: onSecondaryTapCancel,
             // overlayColor: widget.overlayColor,
             splashFactory: widget.splashFactory,
             // statesController: widget.statesController,
-            onTap: !widget.enable
+            onTap: !enable
                 ? null
                 : () async {
-                    if (!widget.enable) return;
+                    if (!enable) return;
                     if (isRunning != _ButtonStatus.stable) return;
                     if (mounted) {
                       setState(() => isRunning = _ButtonStatus.running);
                     }
-                    if (widget.onStatusChange != null) {
-                      widget.onStatusChange!(1); // Running = 1
+                    if (onStatusChange != null) {
+                      onStatusChange!(1); // Running = 1
                     }
-                    if (widget.onTap != null) {
-                      result = await widget.onTap!();
+                    if (onTap != null) {
+                      result = await onTap!();
                       if (result != null) {
                         if (result! && mounted) {
                           setState(() => isRunning = _ButtonStatus.success);
-                          if (widget.onStatusChange != null) {
-                            widget.onStatusChange!(2); // Success = 2
+                          if (onStatusChange != null) {
+                            onStatusChange!(2); // Success = 2
                           }
                         }
                         if (!result! && mounted) {
                           setState(() => isRunning = _ButtonStatus.error);
-                          if (widget.onStatusChange != null) {
-                            widget.onStatusChange!(-1); // Success = -1
+                          if (onStatusChange != null) {
+                            onStatusChange!(-1); // Success = -1
                           }
                         }
                         await Future.delayed(widget.statusShowingDuration);
                       }
                     }
-                    if (widget.onDone != null) {
+                    if (onDone != null) {
                       if (mounted) {
                         setState(() => isRunning = _ButtonStatus.running);
                       }
-                      if (widget.onStatusChange != null) {
-                        widget.onStatusChange!(1);
+                      if (onStatusChange != null) {
+                        onStatusChange!(1);
                       }
-                      await widget.onDone!(result);
+                      await onDone!(result);
                     }
 
                     if (mounted) {
                       setState(() => isRunning = _ButtonStatus.stable);
                     }
-                    if (widget.onStatusChange != null) {
-                      widget.onStatusChange!(0); // Stable = 0
+                    if (onStatusChange != null) {
+                      onStatusChange!(0); // Stable = 0
                     }
                   },
             child: AnimatedSize(
@@ -452,20 +493,20 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 overflow: widget.textOverflow,
                 softWrap: widget.textWrap,
                 textWidthBasis: widget.textWidthBasis,
-                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: widget.fontColor ?? (widget.useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).primaryColor), fontWeight: FontWeight.bold) ?? const TextStyle(),
+                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: widget.fontColor ?? (useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).primaryColor), fontWeight: FontWeight.bold) ?? const TextStyle(),
                 child: Container(
                   height: widget.height,
                   width: widget.width,
                   padding: _____padding,
                   constraints: widget.constraints ?? BoxConstraints(minWidth: _____buttonConstraints, minHeight: _____buttonConstraints),
                   alignment: isRunning == _ButtonStatus.stable
-                      ? widget.expanded
+                      ? expanded
                           ? widget.alignment
                           : null
-                      : widget.expandedIcon ?? widget.expanded
+                      : expandedIcon ?? expanded
                           ? widget.alignment
                           : null,
-                  child: widget.expanded
+                  child: expanded
                       ? child(context)
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
