@@ -6,8 +6,8 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.enable,
     this.animationDuration = const Duration(milliseconds: 500),
     this.margin,
-    this.roundBorderWhenRunning = true,
-    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    this.roundBorderWhenRunning,
+    this.borderRadius,
     this.border,
     this.boxShadow,
     this.backgroundColor,
@@ -30,11 +30,11 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.onSuccessWidget,
     this.onErrorWidget,
     this.iconColor,
-    this.autofocus = false,
+    this.autofocus,
     this.onTapUp,
     this.onTapDown,
     this.onTapCancel,
-    this.enableFeedback = true,
+    this.enableFeedback,
     this.splashColor,
     this.textStyle,
     this.onHover,
@@ -125,7 +125,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final Duration animationDuration;
 
   /// Button auto focus
-  final bool autofocus;
+  final bool? autofocus;
 
   /// Button background color
   /// Default:
@@ -138,7 +138,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Border radius.
   /// Default:
   ///   BorderRadius.all(Radius.circular(8))
-  final BorderRadius borderRadius;
+  final BorderRadius? borderRadius;
 
   /// Button shadow
   final List<BoxShadow>? boxShadow;
@@ -161,7 +161,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final bool? enable;
 
   /// Button pressing feedback showing
-  final bool enableFeedback;
+  final bool? enableFeedback;
 
   /// Button width is expanded or not
   final bool? expanded;
@@ -223,7 +223,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   // final WidgetStateProperty<Color?>? overlayColor;
 
   /// Make the shape circular when processing
-  final bool roundBorderWhenRunning;
+  final bool? roundBorderWhenRunning;
 
   /// Splash color
   final Color? splashColor;
@@ -296,6 +296,19 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late final bool expanded;
   late final bool? expandedIcon;
   late final bool enable;
+  late final bool enableFeedback;
+  late final bool autofocus;
+  late final bool roundBorderWhenRunning;
+  late final Color backgroundColor;
+  late final Color iconColor;
+  late final Color fontColor;
+  late final Color? focusColor;
+  late final Color? splashColor;
+  late final Color? highlightColor;
+  late final Color? hoverColor;
+  late final BorderRadius borderRadius;
+  late final BoxBorder? border;
+  late final List<BoxShadow>? boxShadow;
 
   @override
   void initState() {
@@ -321,7 +334,23 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     expanded = widget.expanded ?? OnProcessButtonDefaultValues.expanded ?? true;
     expandedIcon = widget.expandedIcon ?? OnProcessButtonDefaultValues.expandedIcon;
     enable = widget.enable ?? OnProcessButtonDefaultValues.enable ?? true;
+    enableFeedback = widget.enableFeedback ?? OnProcessButtonDefaultValues.enableFeedback ?? true;
+    autofocus = widget.autofocus ?? OnProcessButtonDefaultValues.autofocus ?? true;
+    roundBorderWhenRunning = widget.roundBorderWhenRunning ?? OnProcessButtonDefaultValues.roundBorderWhenRunning ?? true;
+    backgroundColor = widget.backgroundColor ?? OnProcessButtonDefaultValues.backgroundColor ?? primaryColor;
+    iconColor = widget.iconColor ?? OnProcessButtonDefaultValues.iconColor ?? onPrimaryColor;
+    fontColor = widget.fontColor ?? OnProcessButtonDefaultValues.fontColor ?? onPrimaryColor;
+    focusColor = widget.focusColor ?? OnProcessButtonDefaultValues.focusColor;
+    splashColor = widget.splashColor ?? OnProcessButtonDefaultValues.splashColor;
+    highlightColor = widget.highlightColor ?? OnProcessButtonDefaultValues.highlightColor;
+    hoverColor = widget.hoverColor ?? OnProcessButtonDefaultValues.hoverColor;
+    borderRadius = widget.borderRadius ?? OnProcessButtonDefaultValues.borderRadius ?? const BorderRadius.all(Radius.circular(8));
+    border = widget.border ?? OnProcessButtonDefaultValues.border;
+    boxShadow = widget.boxShadow ?? OnProcessButtonDefaultValues.boxShadow;
   }
+
+  Color get primaryColor => useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor;
+  Color get onPrimaryColor => useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).canvasColor;
 
   Widget statusChild(Widget c) {
     return FittedBox(
@@ -347,7 +376,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   Widget child(BuildContext context) {
-    Color c = widget.iconColor ?? (useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).canvasColor);
+    Color c = iconColor;
     if (isRunning == _ButtonStatus.running) {
       return widget.onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
     }
@@ -362,14 +391,14 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   BoxDecoration boxDecoration() {
-    BorderRadiusGeometry? borderRadius = widget.borderRadius;
+    BorderRadius borderRadius_ = borderRadius;
 
-    if (widget.roundBorderWhenRunning && isRunning != _ButtonStatus.stable) {
-      borderRadius = BorderRadius.circular(MediaQuery.of(context).size.height);
+    if (roundBorderWhenRunning && isRunning != _ButtonStatus.stable) {
+      borderRadius_ = BorderRadius.circular(MediaQuery.of(context).size.height);
     }
 
     return BoxDecoration(
-      borderRadius: borderRadius,
+      borderRadius: borderRadius_,
       border: widget.border,
       boxShadow: widget.boxShadow,
       color: widget.boxShadow == null ? null : Theme.of(context).colorScheme.surface,
@@ -413,19 +442,19 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         clipBehavior: Clip.antiAlias,
         decoration: boxDecoration(),
         child: Material(
-          color: widget.backgroundColor ?? (useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor),
+          color: backgroundColor,
           child: InkWell(
             onLongPress: onLongPress,
             onTapUp: onTapUp,
             onTapDown: onTapDown,
             onTapCancel: onTapCancel,
-            autofocus: widget.autofocus,
-            splashColor: widget.splashColor,
-            enableFeedback: widget.enableFeedback,
+            autofocus: autofocus,
+            splashColor: splashColor,
+            enableFeedback: enableFeedback,
             focusNode: widget.focusNode,
-            focusColor: widget.focusColor,
-            highlightColor: widget.highlightColor,
-            hoverColor: widget.hoverColor,
+            focusColor: focusColor,
+            highlightColor: highlightColor,
+            hoverColor: hoverColor,
             mouseCursor: widget.mouseCursor,
             onDoubleTap: onDoubleTap,
             onFocusChange: onFocusChange,
@@ -493,7 +522,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                 overflow: widget.textOverflow,
                 softWrap: widget.textWrap,
                 textWidthBasis: widget.textWidthBasis,
-                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: widget.fontColor ?? (useMaterial3 ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).primaryColor), fontWeight: FontWeight.bold) ?? const TextStyle(),
+                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: fontColor, fontWeight: FontWeight.bold) ?? const TextStyle(),
                 child: Container(
                   height: widget.height,
                   width: widget.width,

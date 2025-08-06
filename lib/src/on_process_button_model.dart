@@ -113,7 +113,7 @@ class OnProcessButtonDefaultValues {
   static BoxBorder? border;
 
   /// The shadow around the button.
-  static List<BoxShadow>? boxShadow;
+  static List<BoxShadow>? boxShadow; //
 
   /// The width of the button.
   static double? width;
