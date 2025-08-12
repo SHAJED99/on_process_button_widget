@@ -49,3 +49,7 @@
 ## 2.0.7
 
 - Button Icon height fixed
+
+## 2.0.8
+
+- Introducing Parent theme and Global Theme. Now you can use your theme globally from the app. So you do not need to add the theme everywhere inside the Project.

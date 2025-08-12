@@ -22,6 +22,7 @@ class OnProcessButtonDefaultValues {
   static Future<bool?> Function()? onTap;
 
   /// Called after [onTap] completes.
+  /// `isSuccess` is true if the operation was successful, false otherwise.
   static Function(bool? isSuccess)? onDone;
 
   /// Called when a tap is released.
@@ -34,6 +35,7 @@ class OnProcessButtonDefaultValues {
   static void Function()? onTapCancel;
 
   /// Called when the mouse pointer enters or exits the button.
+  /// `isEnter` is true if the mouse pointer enters the button, false if it exits.
   static void Function(bool isEnter)? onHover;
 
   /// Called when the mouse pointer hovers over the button.
@@ -43,9 +45,11 @@ class OnProcessButtonDefaultValues {
   static void Function()? onDoubleTap;
 
   /// Called when the focus changes.
+  /// `isFocused` is true if the button gains focus, false otherwise.
   static void Function(bool isFocused)? onFocusChange;
 
   /// Called when the highlight state changes.
+  /// `isHighlighted` is true if the button is highlighted, false otherwise.
   static void Function(bool isHighlighted)? onHighlightChanged;
 
   /// Called on secondary (right) tap.
@@ -73,8 +77,8 @@ class OnProcessButtonDefaultValues {
   /// Whether the icon should expand during animations.
   static bool? expandedIcon;
 
-  /// Whether the button is enabled.
-  static bool? enable; // TODO: End here
+  /// Whether the button is enabled. When false, the button will be disabled.
+  static bool? enable;
 
   /// Whether to show visual feedback for interactions.
   static bool? enableFeedback;
@@ -113,12 +117,12 @@ class OnProcessButtonDefaultValues {
   static BoxBorder? border;
 
   /// The shadow around the button.
-  static List<BoxShadow>? boxShadow; //
+  static List<BoxShadow>? boxShadow;
 
-  /// The width of the button.
+  /// The width of the button. Prefer using constraints instead.
   static double? width;
 
-  /// The height of the button.
+  /// The height of the button. Prefer using constraints instead.
   static double? height;
 
   /// The size of the status icon inside the button.

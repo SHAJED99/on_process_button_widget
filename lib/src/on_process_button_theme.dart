@@ -76,91 +76,192 @@ class OnProcessButtonThemeData {
   final void Function()? onLongPress;
 
   /// Called when the button status changes.
+  /// - `1` = running
+  /// - `2` = success
+  /// - `-1` = error
+  /// - `0` = stable
   final Function(int i)? onStatusChange;
 
   /// Called when the button is tapped.
+  /// Should return `true` if operation is successful.
   final Future<bool?> Function()? onTap;
 
-  /// Called when the button process is done.
+  /// Called after [onTap] completes.
+  /// `isSuccess` is true if the operation was successful, false otherwise.
   final Function(bool? isSuccess)? onDone;
 
-  /// Called when the button is tapped up.
+  /// Called when a tap is released.
   final void Function(TapUpDetails tapUpDetails)? onTapUp;
 
-  /// Called when the button is tapped down.
+  /// Called when a tap is initiated.
   final void Function(TapDownDetails tapDownDetails)? onTapDown;
 
-  /// Called when the tap is canceled.
+  /// Called when a tap is canceled.
   final void Function()? onTapCancel;
 
-  /// Called when the button is hovered.
+  /// Called when the mouse pointer enters or exits the button.
+  /// `isEnter` is true if the mouse pointer enters the button, false if it exits.
   final void Function(bool isEnter)? onHover;
 
-  /// Called when the button is hovered with a pointer.
+  /// Called when the mouse pointer hovers over the button.
   final void Function(PointerHoverEvent offset)? onHovering;
 
-  /// Called when the button is double-tapped.
+  /// Called on a double tap.
   final void Function()? onDoubleTap;
 
-  /// Called when the focus state changes.
+  /// Called when the focus changes.
+  /// `isFocused` is true if the button gains focus, false otherwise.
   final void Function(bool isFocused)? onFocusChange;
 
+  /// Called when the highlight state changes.
+  /// `isHighlighted` is true if the button is highlighted, false otherwise.
   final void Function(bool isHighlighted)? onHighlightChanged;
+
+  /// Called on secondary (right) tap.
   final void Function()? onSecondaryTap;
+
+  /// Called when a secondary tap is canceled.
   final void Function()? onSecondaryTapCancel;
+
+  /// Called when a secondary tap is released.
   final void Function(TapUpDetails tapUpDetails)? onSecondaryTapUp;
+
+  /// Called when a secondary tap is initiated.
   final void Function(TapDownDetails tapDownDetails)? onSecondaryTapDown;
 
   // ────────────────────────────────────────
   // 🎨 Appearance & Layout
   // ────────────────────────────────────────
 
+  /// Whether to use Material 3 design.
   final bool? useMaterial3;
+
+  /// Whether the button width should expand to fit its container.
   final bool? expanded;
+
+  /// Whether the icon should expand during animations.
   final bool? expandedIcon;
+
+  /// Whether the button is enabled. When false, the button will be disabled.
   final bool? enable;
+
+  /// Whether to show visual feedback for interactions.
   final bool? enableFeedback;
+
+  /// Whether the button should autofocus.
   final bool? autofocus;
+
+  /// Whether the border should be rounded when loading.
   final bool? roundBorderWhenRunning;
+
+  /// The background color of the button.
   final Color? backgroundColor;
+
+  /// The color of the status icons (e.g. loading, success).
   final Color? iconColor;
+
+  /// The color of the button text.
   final Color? fontColor;
+
+  /// The focus color of the button.
   final Color? focusColor;
+
+  /// The splash color of the button.
   final Color? splashColor;
+
+  /// The highlight color when the button is pressed.
   final Color? highlightColor;
+
+  /// The color when the mouse hovers over the button.
   final Color? hoverColor;
+
+  /// The border radius of the button.
   final BorderRadius? borderRadius;
+
+  /// The border around the button.
   final BoxBorder? border;
+
+  /// The shadow around the button.
   final List<BoxShadow>? boxShadow;
+
+  /// The width of the button. Prefer using constraints instead.
   final double? width;
+
+  /// The height of the button. Prefer using constraints instead.
   final double? height;
+
+  /// The size of the status icon inside the button.
   final double? iconHeight;
+
+  /// The outer margin of the button.
   final EdgeInsetsGeometry? margin;
+
+  /// The inner padding around the content.
   final EdgeInsetsGeometry? contentPadding;
+
+  /// The constraints for the button's size.
   final BoxConstraints? constraints;
+
+  /// Alignment of the button's content.
   final AlignmentGeometry? alignment;
+
+  /// Alignment for status animation.
   final AlignmentGeometry? animationAlignment;
+
+  /// Duration of animation transitions.
   final Duration? animationDuration;
+
+  /// Duration to show success/error indicator before resetting.
   final Duration? statusShowingDuration;
+
+  /// The cursor to show when hovering.
   final MouseCursor? mouseCursor;
+
+  /// The text style of the button label.
   final TextStyle? textStyle;
+
+  /// The font weight of the button text.
   final FontWeight? fontWeight;
+
+  /// Alignment of the button text.
   final TextAlign? textAlign;
+
+  /// Overflow behavior of the button text.
   final TextOverflow? textOverflow;
+
+  /// Line height behavior of the text.
   final TextHeightBehavior? textHeightBehavior;
+
+  /// Max number of lines for the button text.
   final int? textMaxLines;
+
+  /// Whether the text should wrap if it overflows.
   final bool? textWrap;
+
+  /// Text width calculation strategy.
   final TextWidthBasis? textWidthBasis;
+
+  /// Focus node for managing keyboard focus.
   final FocusNode? focusNode;
+
+  /// The ink splash factory used by the button.
   final InteractiveInkFeatureFactory? splashFactory;
 
   // ────────────────────────────────────────
   // ✅ Status Widgets
   // ────────────────────────────────────────
 
+  /// Custom widget shown when the button is loading.
   final Widget? onRunningWidget;
+
+  /// Custom widget shown when the action is successful.
   final Widget? onSuccessWidget;
+
+  /// Custom widget shown when the action fails.
   final Widget? onErrorWidget;
+
+  /// Whether to show the running status widget.
+  /// Default is `true`.
   final bool? showRunningStatusWidget;
 
   /// Creates a copy of this theme data with the given fields replaced by new values.
@@ -247,7 +348,8 @@ class OnProcessButtonThemeData {
       enable: enable ?? this.enable,
       enableFeedback: enableFeedback ?? this.enableFeedback,
       autofocus: autofocus ?? this.autofocus,
-      roundBorderWhenRunning: roundBorderWhenRunning ?? this.roundBorderWhenRunning,
+      roundBorderWhenRunning:
+          roundBorderWhenRunning ?? this.roundBorderWhenRunning,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       iconColor: iconColor ?? this.iconColor,
       fontColor: fontColor ?? this.fontColor,
@@ -267,7 +369,8 @@ class OnProcessButtonThemeData {
       alignment: alignment ?? this.alignment,
       animationAlignment: animationAlignment ?? this.animationAlignment,
       animationDuration: animationDuration ?? this.animationDuration,
-      statusShowingDuration: statusShowingDuration ?? this.statusShowingDuration,
+      statusShowingDuration:
+          statusShowingDuration ?? this.statusShowingDuration,
       mouseCursor: mouseCursor ?? this.mouseCursor,
       textStyle: textStyle ?? this.textStyle,
       fontWeight: fontWeight ?? this.fontWeight,
@@ -282,7 +385,8 @@ class OnProcessButtonThemeData {
       onRunningWidget: onRunningWidget ?? this.onRunningWidget,
       onSuccessWidget: onSuccessWidget ?? this.onSuccessWidget,
       onErrorWidget: onErrorWidget ?? this.onErrorWidget,
-      showRunningStatusWidget: showRunningStatusWidget ?? this.showRunningStatusWidget,
+      showRunningStatusWidget:
+          showRunningStatusWidget ?? this.showRunningStatusWidget,
     );
   }
 }
@@ -300,7 +404,8 @@ class OnProcessButtonTheme extends InheritedWidget {
   /// Returns the [OnProcessButtonThemeData] from the closest [OnProcessButtonTheme] ancestor.
   /// If there is no ancestor, it returns null.
   static OnProcessButtonThemeData? of(BuildContext context) {
-    final OnProcessButtonTheme? theme = context.dependOnInheritedWidgetOfExactType<OnProcessButtonTheme>();
+    final OnProcessButtonTheme? theme =
+        context.dependOnInheritedWidgetOfExactType<OnProcessButtonTheme>();
     return theme?.data;
   }
 
