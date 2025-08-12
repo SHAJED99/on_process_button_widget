@@ -151,6 +151,9 @@ class OnProcessButtonDefaultValues {
   /// The text style of the button label.
   static TextStyle? textStyle;
 
+  /// The font weight of the button text.
+  static FontWeight? fontWeight;
+
   /// Alignment of the button text.
   static TextAlign? textAlign;
 
@@ -187,4 +190,8 @@ class OnProcessButtonDefaultValues {
 
   /// Custom widget shown when the action fails.
   static Widget? onErrorWidget;
+
+  /// Whether to show the running status widget.
+  /// Default is `true`.
+  static bool? showRunningStatusWidget;
 }

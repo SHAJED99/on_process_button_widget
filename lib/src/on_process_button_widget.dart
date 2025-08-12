@@ -4,7 +4,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   const OnProcessButtonWidget({
     Key? key,
     this.enable,
-    this.animationDuration = const Duration(milliseconds: 500),
+    this.animationDuration,
     this.margin,
     this.roundBorderWhenRunning,
     this.borderRadius,
@@ -14,7 +14,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.onLongPress,
     this.onStatusChange,
     this.onTap,
-    this.statusShowingDuration = const Duration(seconds: 2),
+    this.statusShowingDuration,
     this.onDone,
     this.height,
     this.width,
@@ -25,7 +25,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.iconHeight,
     this.child,
     this.expandedIcon = false,
-    this.alignment = Alignment.center,
+    this.alignment,
     this.onRunningWidget,
     this.onSuccessWidget,
     this.onErrorWidget,
@@ -37,6 +37,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.enableFeedback,
     this.splashColor,
     this.textStyle,
+    this.fontWeight,
     this.onHover,
     this.onHovering,
     this.focusNode,
@@ -54,15 +55,15 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.onSecondaryTapDown,
     this.splashFactory,
     // this.statesController,
-    this.textAlign = TextAlign.center,
-    this.textOverflow = TextOverflow.clip,
+    this.textAlign,
+    this.textOverflow,
     this.textHeightBehavior,
     this.textMaxLines,
-    this.textWrap = true,
-    this.textWidthBasis = TextWidthBasis.parent,
+    this.textWrap,
+    this.textWidthBasis,
     this.useMaterial3,
     this.fontColor,
-    this.animationAlignment = Alignment.center,
+    this.animationAlignment,
   }) : super(key: key);
 
   /// Callback function for long press
@@ -114,15 +115,15 @@ class OnProcessButtonWidget extends StatefulWidget {
   final void Function()? onSecondaryTapCancel;
 
   /// Child alignment
-  final AlignmentGeometry alignment;
+  final AlignmentGeometry? alignment;
 
   /// Animation Alignment
-  final AlignmentGeometry animationAlignment;
+  final AlignmentGeometry? animationAlignment;
 
   /// Animation Duration.
   /// Default:
   ///   Duration(milliseconds: 500
-  final Duration animationDuration;
+  final Duration? animationDuration;
 
   /// Button auto focus
   final bool? autofocus;
@@ -237,10 +238,10 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Status showing duration.
   /// Default:
   ///   Duration(seconds: 2)
-  final Duration statusShowingDuration;
+  final Duration? statusShowingDuration;
 
   /// Button text alignment
-  final TextAlign textAlign;
+  final TextAlign? textAlign;
 
   /// Button text height behavior
   final TextHeightBehavior? textHeightBehavior;
@@ -249,7 +250,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final int? textMaxLines;
 
   /// Button text overflow
-  final TextOverflow textOverflow;
+  final TextOverflow? textOverflow;
 
   /// Button text style.
   /// Default:
@@ -257,10 +258,15 @@ class OnProcessButtonWidget extends StatefulWidget {
   final TextStyle? textStyle;
 
   /// Button text width basis
-  final TextWidthBasis textWidthBasis;
+  /// Default:
+  ///  FontWeight.bold
+  final FontWeight? fontWeight;
+
+  /// Button text width basis
+  final TextWidthBasis? textWidthBasis;
 
   /// Button text wrap
-  final bool textWrap;
+  final bool? textWrap;
 
   /// Use material 3
   final bool? useMaterial3;
@@ -309,44 +315,104 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late final BorderRadius borderRadius;
   late final BoxBorder? border;
   late final List<BoxShadow>? boxShadow;
+  late final double? width;
+  late final double? height;
+  late final double? iconHeight;
+  late final EdgeInsetsGeometry? margin;
+  late final EdgeInsetsGeometry? contentPadding;
+  late final BoxConstraints? constraints;
+  late final AlignmentGeometry alignment;
+  late final AlignmentGeometry animationAlignment;
+  late final Duration animationDuration;
+  late final Duration statusShowingDuration;
+  late final MouseCursor? mouseCursor;
+  late final TextStyle textStyle;
+  late final FontWeight fontWeight;
+  late final TextAlign textAlign;
+  late final TextOverflow textOverflow;
+  late final TextHeightBehavior? textHeightBehavior;
+  late final int? textMaxLines;
+  late final bool textWrap;
+  late final TextWidthBasis textWidthBasis;
+  late final FocusNode? focusNode;
+  late final InteractiveInkFeatureFactory? splashFactory;
+  late final Widget? onRunningWidget;
+  late final Widget? onSuccessWidget;
+  late final Widget? onErrorWidget;
+  late final bool showRunningStatusWidget;
 
   @override
   void initState() {
     super.initState();
     isRunning = widget.isRunning ? _ButtonStatus.running : _ButtonStatus.stable;
 
-    onLongPress = widget.onLongPress ?? OnProcessButtonDefaultValues.onLongPress;
-    onStatusChange = widget.onStatusChange ?? OnProcessButtonDefaultValues.onStatusChange;
-    onTap = widget.onTap ?? OnProcessButtonDefaultValues.onTap;
-    onDone = widget.onDone ?? OnProcessButtonDefaultValues.onDone;
-    onTapUp = widget.onTapUp ?? OnProcessButtonDefaultValues.onTapUp;
-    onTapDown = widget.onTapDown ?? OnProcessButtonDefaultValues.onTapDown;
-    onTapCancel = widget.onTapCancel ?? OnProcessButtonDefaultValues.onTapCancel;
-    onHovering = widget.onHovering ?? OnProcessButtonDefaultValues.onHovering;
-    onDoubleTap = widget.onDoubleTap ?? OnProcessButtonDefaultValues.onDoubleTap;
-    onFocusChange = widget.onFocusChange ?? OnProcessButtonDefaultValues.onFocusChange;
-    onHighlightChanged = widget.onHighlightChanged ?? OnProcessButtonDefaultValues.onHighlightChanged;
-    onSecondaryTap = widget.onSecondaryTap ?? OnProcessButtonDefaultValues.onSecondaryTap;
-    onSecondaryTapCancel = widget.onSecondaryTapCancel ?? OnProcessButtonDefaultValues.onSecondaryTapCancel;
-    onSecondaryTapUp = widget.onSecondaryTapUp ?? OnProcessButtonDefaultValues.onSecondaryTapUp;
-    onSecondaryTapDown = widget.onSecondaryTapDown ?? OnProcessButtonDefaultValues.onSecondaryTapDown;
-    useMaterial3 = widget.useMaterial3 ?? OnProcessButtonDefaultValues.useMaterial3 ?? true;
-    expanded = widget.expanded ?? OnProcessButtonDefaultValues.expanded ?? true;
-    expandedIcon = widget.expandedIcon ?? OnProcessButtonDefaultValues.expandedIcon;
-    enable = widget.enable ?? OnProcessButtonDefaultValues.enable ?? true;
-    enableFeedback = widget.enableFeedback ?? OnProcessButtonDefaultValues.enableFeedback ?? true;
-    autofocus = widget.autofocus ?? OnProcessButtonDefaultValues.autofocus ?? true;
-    roundBorderWhenRunning = widget.roundBorderWhenRunning ?? OnProcessButtonDefaultValues.roundBorderWhenRunning ?? true;
-    backgroundColor = widget.backgroundColor ?? OnProcessButtonDefaultValues.backgroundColor ?? primaryColor;
-    iconColor = widget.iconColor ?? OnProcessButtonDefaultValues.iconColor ?? onPrimaryColor;
-    fontColor = widget.fontColor ?? OnProcessButtonDefaultValues.fontColor ?? onPrimaryColor;
-    focusColor = widget.focusColor ?? OnProcessButtonDefaultValues.focusColor;
-    splashColor = widget.splashColor ?? OnProcessButtonDefaultValues.splashColor;
-    highlightColor = widget.highlightColor ?? OnProcessButtonDefaultValues.highlightColor;
-    hoverColor = widget.hoverColor ?? OnProcessButtonDefaultValues.hoverColor;
-    borderRadius = widget.borderRadius ?? OnProcessButtonDefaultValues.borderRadius ?? const BorderRadius.all(Radius.circular(8));
-    border = widget.border ?? OnProcessButtonDefaultValues.border;
-    boxShadow = widget.boxShadow ?? OnProcessButtonDefaultValues.boxShadow;
+    // Get theme data if available
+    final themeData = OnProcessButtonTheme.of(context);
+
+    onLongPress = widget.onLongPress ?? themeData?.onLongPress ?? OnProcessButtonDefaultValues.onLongPress;
+    onStatusChange = widget.onStatusChange ?? themeData?.onStatusChange ?? OnProcessButtonDefaultValues.onStatusChange;
+    onTap = widget.onTap ?? themeData?.onTap ?? OnProcessButtonDefaultValues.onTap;
+    onDone = widget.onDone ?? themeData?.onDone ?? OnProcessButtonDefaultValues.onDone;
+    onTapUp = widget.onTapUp ?? themeData?.onTapUp ?? OnProcessButtonDefaultValues.onTapUp;
+    onTapDown = widget.onTapDown ?? themeData?.onTapDown ?? OnProcessButtonDefaultValues.onTapDown;
+    onTapCancel = widget.onTapCancel ?? themeData?.onTapCancel ?? OnProcessButtonDefaultValues.onTapCancel;
+    onHovering = widget.onHovering ?? themeData?.onHovering ?? OnProcessButtonDefaultValues.onHovering;
+    onDoubleTap = widget.onDoubleTap ?? themeData?.onDoubleTap ?? OnProcessButtonDefaultValues.onDoubleTap;
+    onFocusChange = widget.onFocusChange ?? themeData?.onFocusChange ?? OnProcessButtonDefaultValues.onFocusChange;
+    onHighlightChanged = widget.onHighlightChanged ?? themeData?.onHighlightChanged ?? OnProcessButtonDefaultValues.onHighlightChanged;
+    onSecondaryTap = widget.onSecondaryTap ?? themeData?.onSecondaryTap ?? OnProcessButtonDefaultValues.onSecondaryTap;
+    onSecondaryTapCancel = widget.onSecondaryTapCancel ?? themeData?.onSecondaryTapCancel ?? OnProcessButtonDefaultValues.onSecondaryTapCancel;
+    onSecondaryTapUp = widget.onSecondaryTapUp ?? themeData?.onSecondaryTapUp ?? OnProcessButtonDefaultValues.onSecondaryTapUp;
+    onSecondaryTapDown = widget.onSecondaryTapDown ?? themeData?.onSecondaryTapDown ?? OnProcessButtonDefaultValues.onSecondaryTapDown;
+    useMaterial3 = widget.useMaterial3 ?? themeData?.useMaterial3 ?? OnProcessButtonDefaultValues.useMaterial3 ?? true;
+    expanded = widget.expanded ?? themeData?.expanded ?? OnProcessButtonDefaultValues.expanded ?? true;
+    expandedIcon = widget.expandedIcon ?? themeData?.expandedIcon ?? OnProcessButtonDefaultValues.expandedIcon;
+    enable = widget.enable ?? themeData?.enable ?? OnProcessButtonDefaultValues.enable ?? true;
+    enableFeedback = widget.enableFeedback ?? themeData?.enableFeedback ?? OnProcessButtonDefaultValues.enableFeedback ?? true;
+    autofocus = widget.autofocus ?? themeData?.autofocus ?? OnProcessButtonDefaultValues.autofocus ?? true;
+    roundBorderWhenRunning = widget.roundBorderWhenRunning ?? themeData?.roundBorderWhenRunning ?? OnProcessButtonDefaultValues.roundBorderWhenRunning ?? true;
+    backgroundColor = widget.backgroundColor ?? themeData?.backgroundColor ?? OnProcessButtonDefaultValues.backgroundColor ?? primaryColor;
+    iconColor = widget.iconColor ?? themeData?.iconColor ?? OnProcessButtonDefaultValues.iconColor ?? onPrimaryColor;
+    fontColor = widget.fontColor ?? themeData?.fontColor ?? OnProcessButtonDefaultValues.fontColor ?? onPrimaryColor;
+    focusColor = widget.focusColor ?? themeData?.focusColor ?? OnProcessButtonDefaultValues.focusColor;
+    splashColor = widget.splashColor ?? themeData?.splashColor ?? OnProcessButtonDefaultValues.splashColor;
+    highlightColor = widget.highlightColor ?? themeData?.highlightColor ?? OnProcessButtonDefaultValues.highlightColor;
+    hoverColor = widget.hoverColor ?? themeData?.hoverColor ?? OnProcessButtonDefaultValues.hoverColor;
+    borderRadius = widget.borderRadius ?? themeData?.borderRadius ?? OnProcessButtonDefaultValues.borderRadius ?? const BorderRadius.all(Radius.circular(8));
+    border = widget.border ?? themeData?.border ?? OnProcessButtonDefaultValues.border;
+    boxShadow = widget.boxShadow ?? themeData?.boxShadow ?? OnProcessButtonDefaultValues.boxShadow;
+    width = widget.width ?? themeData?.width ?? OnProcessButtonDefaultValues.width;
+    height = widget.height ?? themeData?.height ?? OnProcessButtonDefaultValues.height;
+    iconHeight = widget.iconHeight ?? themeData?.iconHeight ?? OnProcessButtonDefaultValues.iconHeight;
+    margin = widget.margin ?? themeData?.margin ?? OnProcessButtonDefaultValues.margin;
+    contentPadding = widget.contentPadding ?? themeData?.contentPadding ?? OnProcessButtonDefaultValues.contentPadding;
+    constraints = widget.constraints ?? themeData?.constraints ?? OnProcessButtonDefaultValues.constraints;
+    alignment = widget.alignment ?? themeData?.alignment ?? OnProcessButtonDefaultValues.alignment ?? Alignment.center;
+    animationAlignment = widget.animationAlignment ?? themeData?.animationAlignment ?? OnProcessButtonDefaultValues.animationAlignment ?? Alignment.center;
+    animationDuration = widget.animationDuration ?? themeData?.animationDuration ?? OnProcessButtonDefaultValues.animationDuration ?? const Duration(milliseconds: 500);
+    statusShowingDuration = widget.statusShowingDuration ?? themeData?.statusShowingDuration ?? OnProcessButtonDefaultValues.statusShowingDuration ?? const Duration(seconds: 2);
+    mouseCursor = widget.mouseCursor ?? themeData?.mouseCursor ?? OnProcessButtonDefaultValues.mouseCursor;
+    fontWeight = widget.fontWeight ?? themeData?.fontWeight ?? OnProcessButtonDefaultValues.fontWeight ?? FontWeight.bold;
+    textStyle = widget.textStyle ??
+        themeData?.textStyle ??
+        OnProcessButtonDefaultValues.textStyle ??
+        Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: fontColor,
+              fontWeight: fontWeight,
+            ) ??
+        const TextStyle();
+    textAlign = widget.textAlign ?? themeData?.textAlign ?? OnProcessButtonDefaultValues.textAlign ?? TextAlign.center;
+    textOverflow = widget.textOverflow ?? themeData?.textOverflow ?? OnProcessButtonDefaultValues.textOverflow ?? TextOverflow.clip;
+    textHeightBehavior = widget.textHeightBehavior ?? themeData?.textHeightBehavior ?? OnProcessButtonDefaultValues.textHeightBehavior;
+    textMaxLines = widget.textMaxLines ?? themeData?.textMaxLines ?? OnProcessButtonDefaultValues.textMaxLines;
+    textWrap = widget.textWrap ?? themeData?.textWrap ?? OnProcessButtonDefaultValues.textWrap ?? true;
+    textWidthBasis = widget.textWidthBasis ?? themeData?.textWidthBasis ?? OnProcessButtonDefaultValues.textWidthBasis ?? TextWidthBasis.parent;
+    focusNode = widget.focusNode ?? themeData?.focusNode ?? OnProcessButtonDefaultValues.focusNode;
+    splashFactory = widget.splashFactory ?? themeData?.splashFactory ?? OnProcessButtonDefaultValues.splashFactory;
+    onRunningWidget = widget.onRunningWidget ?? themeData?.onRunningWidget ?? OnProcessButtonDefaultValues.onRunningWidget;
+    onSuccessWidget = widget.onSuccessWidget ?? themeData?.onSuccessWidget ?? OnProcessButtonDefaultValues.onSuccessWidget;
+    onErrorWidget = widget.onErrorWidget ?? themeData?.onErrorWidget ?? OnProcessButtonDefaultValues.onErrorWidget;
+    showRunningStatusWidget = themeData?.showRunningStatusWidget ?? OnProcessButtonDefaultValues.showRunningStatusWidget ?? true;
   }
 
   Color get primaryColor => useMaterial3 ? Theme.of(context).colorScheme.primary : Theme.of(context).primaryColor;
@@ -360,11 +426,11 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         children: [
           Container(
             constraints: BoxConstraints(
-              maxHeight: widget.iconHeight ?? 24,
-              maxWidth: widget.iconHeight ?? 24,
+              maxHeight: iconHeight ?? 24,
+              maxWidth: iconHeight ?? 24,
             ),
-            height: widget.iconHeight ?? ____contentHeight,
-            width: widget.iconHeight ?? ____contentHeight,
+            height: iconHeight ?? ____contentHeight,
+            width: iconHeight ?? ____contentHeight,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: c,
@@ -377,14 +443,15 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   Widget child(BuildContext context) {
     Color c = iconColor;
-    if (isRunning == _ButtonStatus.running) {
-      return widget.onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
+
+    if (isRunning == _ButtonStatus.running && showRunningStatusWidget) {
+      return onRunningWidget ?? statusChild(CircularProgressIndicator(color: c));
     }
     if (isRunning == _ButtonStatus.success) {
-      return widget.onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
+      return onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
     }
     if (isRunning == _ButtonStatus.error) {
-      return widget.onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
+      return onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
     }
 
     return widget.child ?? const SizedBox();
@@ -411,9 +478,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   double get ____contentHeight {
-    double f = _____buttonConstraints - ((widget.contentPadding?.vertical ?? 0) * 2);
-    double fontSize = (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.fontSize ?? 0;
-    double height = (widget.textStyle ?? Theme.of(context).textTheme.titleMedium)?.height ?? 0;
+    double f = _____buttonConstraints - ((contentPadding?.vertical ?? 0) * 2);
+    double fontSize = textStyle.fontSize ?? 0;
+    double height = textStyle.height ?? 0;
     fontSize = MediaQuery.of(context).textScaler.scale(fontSize) - MediaQuery.of(context).textScaler.scale(height);
     if (f < fontSize) f = fontSize;
     return f;
@@ -421,10 +488,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   EdgeInsetsGeometry? get _____padding {
     if (isRunning != _ButtonStatus.stable) {
-      return EdgeInsets.all((widget.contentPadding?.vertical ?? 0) / 2);
+      return EdgeInsets.all((contentPadding?.vertical ?? 0) / 2);
     }
 
-    return widget.contentPadding;
+    return contentPadding;
   }
 
   @override
@@ -438,7 +505,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
       },
       onHover: onHovering,
       child: Container(
-        margin: widget.margin,
+        margin: margin,
         clipBehavior: Clip.antiAlias,
         decoration: boxDecoration(),
         child: Material(
@@ -451,11 +518,11 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
             autofocus: autofocus,
             splashColor: splashColor,
             enableFeedback: enableFeedback,
-            focusNode: widget.focusNode,
+            focusNode: focusNode,
             focusColor: focusColor,
             highlightColor: highlightColor,
             hoverColor: hoverColor,
-            mouseCursor: widget.mouseCursor,
+            mouseCursor: mouseCursor,
             onDoubleTap: onDoubleTap,
             onFocusChange: onFocusChange,
             onHighlightChanged: onHighlightChanged,
@@ -464,7 +531,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
             onSecondaryTapDown: onSecondaryTapDown,
             onSecondaryTapCancel: onSecondaryTapCancel,
             // overlayColor: widget.overlayColor,
-            splashFactory: widget.splashFactory,
+            splashFactory: splashFactory,
             // statesController: widget.statesController,
             onTap: !enable
                 ? null
@@ -492,7 +559,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                             onStatusChange!(-1); // Success = -1
                           }
                         }
-                        await Future.delayed(widget.statusShowingDuration);
+                        await Future.delayed(statusShowingDuration);
                       }
                     }
                     if (onDone != null) {
@@ -513,27 +580,27 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                     }
                   },
             child: AnimatedSize(
-              alignment: widget.animationAlignment,
-              duration: widget.animationDuration,
+              alignment: animationAlignment,
+              duration: animationDuration,
               child: DefaultTextStyle(
-                textAlign: widget.textAlign,
-                textHeightBehavior: widget.textHeightBehavior,
-                maxLines: widget.textMaxLines,
-                overflow: widget.textOverflow,
-                softWrap: widget.textWrap,
-                textWidthBasis: widget.textWidthBasis,
-                style: widget.textStyle ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: fontColor, fontWeight: FontWeight.bold) ?? const TextStyle(),
+                textAlign: textAlign,
+                textHeightBehavior: textHeightBehavior,
+                maxLines: textMaxLines,
+                overflow: textOverflow,
+                softWrap: textWrap,
+                textWidthBasis: textWidthBasis,
+                style: textStyle,
                 child: Container(
-                  height: widget.height,
-                  width: widget.width,
+                  height: height,
+                  width: width,
                   padding: _____padding,
                   constraints: widget.constraints ?? BoxConstraints(minWidth: _____buttonConstraints, minHeight: _____buttonConstraints),
                   alignment: isRunning == _ButtonStatus.stable
                       ? expanded
-                          ? widget.alignment
+                          ? alignment
                           : null
                       : expandedIcon ?? expanded
-                          ? widget.alignment
+                          ? alignment
                           : null,
                   child: expanded
                       ? child(context)
