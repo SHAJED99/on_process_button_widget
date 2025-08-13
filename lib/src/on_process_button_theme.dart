@@ -82,7 +82,8 @@ class OnProcessButtonThemeData {
   /// - `2` = success
   /// - `-1` = error
   /// - `0` = stable
-  final Function(int i)? onStatusChange;
+  final void Function(BuildContext? context, OnProcessButtonStatus i)?
+      onStatusChange;
 
   /// Called when the button is tapped.
   /// Should return `true` if operation is successful.
@@ -271,7 +272,8 @@ class OnProcessButtonThemeData {
   /// values.
   OnProcessButtonThemeData copyWith({
     void Function()? onLongPress,
-    Function(int i)? onStatusChange,
+    void Function(BuildContext? context, OnProcessButtonStatus i)?
+        onStatusChange,
     Future<bool?> Function()? onTap,
     Function(bool? isSuccess)? onDone,
     void Function(TapUpDetails tapUpDetails)? onTapUp,

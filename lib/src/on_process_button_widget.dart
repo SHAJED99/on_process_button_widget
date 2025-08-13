@@ -27,12 +27,11 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.width,
     this.isRunning = false,
     this.expanded,
-    this.contentPadding =
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+    this.contentPadding,
     this.constraints,
     this.iconHeight,
     this.child,
-    this.expandedIcon = false,
+    this.expandedIcon,
     this.alignment,
     this.onRunningWidget,
     this.onSuccessWidget,
@@ -79,7 +78,8 @@ class OnProcessButtonWidget extends StatefulWidget {
 
   /// Callback function for changing button status. Running = 1, Success = 2,
   /// Success = -1, Stable = 0
-  final Function(int i)? onStatusChange;
+  final void Function(BuildContext? context, OnProcessButtonStatus i)?
+      onStatusChange;
 
   /// Callback function for pressing. Returns a Future<bool?> indicating
   /// success or failure.
@@ -296,11 +296,13 @@ class OnProcessButtonWidget extends StatefulWidget {
 }
 
 class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
-  late _ButtonStatus isRunning;
+  late OnProcessButtonStatus isRunning;
+  late final OnProcessButtonThemeData? themeData;
   bool? result;
 
   late final void Function()? onLongPress;
-  late final Function(int i)? onStatusChange;
+  late final void Function(BuildContext? context, OnProcessButtonStatus i)?
+      onStatusChange;
   late final Future<bool?>? Function()? onTap;
   late final Function(bool? isSuccess)? onDone;
   late final void Function(TapUpDetails tapUpDetails)? onTapUp;
@@ -322,9 +324,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late final bool enableFeedback;
   late final bool autofocus;
   late final bool roundBorderWhenRunning;
-  late final Color backgroundColor;
-  late final Color iconColor;
-  late final Color fontColor;
+  late Color backgroundColor;
+  late Color iconColor;
+  late Color fontColor;
   late final Color? focusColor;
   late final Color? splashColor;
   late final Color? highlightColor;
@@ -336,14 +338,14 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late final double? height;
   late final double? iconHeight;
   late final EdgeInsetsGeometry? margin;
-  late final EdgeInsetsGeometry? contentPadding;
+  late final EdgeInsetsGeometry contentPadding;
   late final BoxConstraints? constraints;
   late final AlignmentGeometry alignment;
   late final AlignmentGeometry animationAlignment;
   late final Duration animationDuration;
   late final Duration statusShowingDuration;
   late final MouseCursor? mouseCursor;
-  late final TextStyle textStyle;
+  late TextStyle textStyle;
   late final FontWeight fontWeight;
   late final TextAlign textAlign;
   late final TextOverflow textOverflow;
@@ -361,11 +363,255 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   @override
   void initState() {
     super.initState();
-    isRunning = widget.isRunning ? _ButtonStatus.running : _ButtonStatus.stable;
+    ____setFinalValues(context);
+  }
 
-    // Get theme data if available
-    final OnProcessButtonThemeData? themeData =
-        OnProcessButtonTheme.of(context);
+  Widget statusChild(Widget c) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: iconHeight ?? 24,
+              maxWidth: iconHeight ?? 24,
+            ),
+            height: iconHeight ?? ____contentHeight,
+            width: iconHeight ?? ____contentHeight,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: c,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget child(BuildContext context) {
+    Color c = iconColor;
+
+    if (isRunning == OnProcessButtonStatus.running && showRunningStatusWidget) {
+      return onRunningWidget ??
+          statusChild(CircularProgressIndicator(color: c));
+    }
+    if (isRunning == OnProcessButtonStatus.success) {
+      return onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
+    }
+    if (isRunning == OnProcessButtonStatus.error) {
+      return onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
+    }
+
+    return widget.child ?? const SizedBox();
+  }
+
+  BoxDecoration boxDecoration() {
+    BorderRadius borderRadius_ = borderRadius;
+
+    if (roundBorderWhenRunning && isRunning != OnProcessButtonStatus.stable) {
+      borderRadius_ = BorderRadius.circular(MediaQuery.of(context).size.height);
+    }
+
+    return BoxDecoration(
+      borderRadius: borderRadius_,
+      border: widget.border,
+      boxShadow: widget.boxShadow,
+      color: widget.boxShadow == null
+          ? null
+          : Theme.of(context).colorScheme.surface,
+    );
+  }
+
+  double get _____buttonConstraints {
+    BoxConstraints c = widget.constraints ??
+        BoxConstraints(
+          minHeight: Theme.of(context).buttonTheme.height -
+              (widget.border?.top.width ?? 0) -
+              (widget.border?.bottom.width ?? 0),
+        );
+    return min(c.minHeight, c.minHeight);
+  }
+
+  double get ____contentHeight {
+    double f = _____buttonConstraints - ((contentPadding.vertical) * 2);
+    double fontSize = textStyle.fontSize ?? 0;
+    double height = textStyle.height ?? 0;
+    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) -
+        MediaQuery.of(context).textScaler.scale(height);
+    if (f < fontSize) f = fontSize;
+    return f;
+  }
+
+  EdgeInsetsGeometry? get _____padding {
+    if (isRunning != OnProcessButtonStatus.stable) {
+      return EdgeInsets.all((contentPadding.vertical) / 2);
+    }
+
+    return contentPadding;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ___setNotFinalVariables(context);
+    return MouseRegion(
+      onEnter: (_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (onHover != null) onHover!(true);
+        });
+      },
+      onExit: (_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (onHover != null) onHover!(false);
+        });
+      },
+      onHover: onHovering,
+      child: Container(
+        margin: margin,
+        clipBehavior: Clip.antiAlias,
+        decoration: boxDecoration(),
+        child: Material(
+          color: backgroundColor,
+          child: InkWell(
+            onLongPress: onLongPress,
+            onTapUp: onTapUp,
+            onTapDown: onTapDown,
+            onTapCancel: onTapCancel,
+            autofocus: autofocus,
+            splashColor: splashColor,
+            enableFeedback: enableFeedback,
+            focusNode: focusNode,
+            focusColor: focusColor,
+            highlightColor: highlightColor,
+            hoverColor: hoverColor,
+            mouseCursor: mouseCursor,
+            onDoubleTap: onDoubleTap,
+            onFocusChange: onFocusChange,
+            onHighlightChanged: onHighlightChanged,
+            onSecondaryTap: onSecondaryTap,
+            onSecondaryTapUp: onSecondaryTapUp,
+            onSecondaryTapDown: onSecondaryTapDown,
+            onSecondaryTapCancel: onSecondaryTapCancel,
+            // overlayColor: widget.overlayColor,
+            splashFactory: splashFactory,
+            // statesController: widget.statesController,
+            onTap: !enable
+                ? null
+                : () async {
+                    if (!enable) return;
+                    if (isRunning != OnProcessButtonStatus.stable) return;
+                    if (mounted) {
+                      setState(() => isRunning = OnProcessButtonStatus.running);
+                    }
+                    if (onStatusChange != null) {
+                      onStatusChange!(
+                        context.mounted ? context : null,
+                        OnProcessButtonStatus.running,
+                      ); // Running = 1
+                    }
+                    if (onTap != null) {
+                      result = await onTap!();
+                      if (result != null) {
+                        if (result! && mounted) {
+                          setState(
+                            () => isRunning = OnProcessButtonStatus.success,
+                          );
+                          if (onStatusChange != null) {
+                            onStatusChange!(
+                              context.mounted ? context : null,
+                              OnProcessButtonStatus.success,
+                            ); // Success = 2
+                          }
+                        }
+                        if (!result! && mounted) {
+                          setState(
+                            () => isRunning = OnProcessButtonStatus.error,
+                          );
+                          if (onStatusChange != null) {
+                            onStatusChange!(
+                              context.mounted ? context : null,
+                              OnProcessButtonStatus.error,
+                            ); // Success = -1
+                          }
+                        }
+                        await Future<void>.delayed(statusShowingDuration);
+                      }
+                    }
+                    if (onDone != null) {
+                      if (mounted) {
+                        setState(
+                          () => isRunning = OnProcessButtonStatus.running,
+                        );
+                      }
+                      if (onStatusChange != null) {
+                        onStatusChange!(
+                          context.mounted ? context : null,
+                          OnProcessButtonStatus.running,
+                        );
+                      }
+                      await onDone!(result);
+                    }
+
+                    if (mounted) {
+                      setState(() => isRunning = OnProcessButtonStatus.stable);
+                    }
+                    if (onStatusChange != null) {
+                      onStatusChange!(
+                        context.mounted ? context : null,
+                        OnProcessButtonStatus.stable,
+                      );
+                    }
+                  },
+            child: AnimatedSize(
+              alignment: animationAlignment,
+              duration: animationDuration,
+              child: DefaultTextStyle(
+                textAlign: textAlign,
+                textHeightBehavior: textHeightBehavior,
+                maxLines: textMaxLines,
+                overflow: textOverflow,
+                softWrap: textWrap,
+                textWidthBasis: textWidthBasis,
+                style: textStyle,
+                child: Container(
+                  height: height,
+                  width: width,
+                  padding: _____padding,
+                  constraints: widget.constraints ??
+                      BoxConstraints(
+                        minWidth: _____buttonConstraints,
+                        minHeight: _____buttonConstraints,
+                      ),
+                  alignment: isRunning == OnProcessButtonStatus.stable
+                      ? expanded
+                          ? alignment
+                          : null
+                      : expandedIcon ?? expanded
+                          ? alignment
+                          : null,
+                  child: expanded
+                      ? child(context)
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            child(context),
+                          ],
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void ____setFinalValues(BuildContext context) {
+    themeData = OnProcessButtonTheme.of(context);
+
+    isRunning = widget.isRunning
+        ? OnProcessButtonStatus.running
+        : OnProcessButtonStatus.stable;
 
     onLongPress = widget.onLongPress ??
         themeData?.onLongPress ??
@@ -387,6 +633,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     onTapCancel = widget.onTapCancel ??
         themeData?.onTapCancel ??
         OnProcessButtonDefaultValues.onTapCancel;
+    onHover = widget.onHover ??
+        themeData?.onHover ??
+        OnProcessButtonDefaultValues.onHover;
     onHovering = widget.onHovering ??
         themeData?.onHovering ??
         OnProcessButtonDefaultValues.onHovering;
@@ -438,18 +687,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         themeData?.roundBorderWhenRunning ??
         OnProcessButtonDefaultValues.roundBorderWhenRunning ??
         true;
-    backgroundColor = widget.backgroundColor ??
-        themeData?.backgroundColor ??
-        OnProcessButtonDefaultValues.backgroundColor ??
-        primaryColor;
-    iconColor = widget.iconColor ??
-        themeData?.iconColor ??
-        OnProcessButtonDefaultValues.iconColor ??
-        onPrimaryColor;
-    fontColor = widget.fontColor ??
-        themeData?.fontColor ??
-        OnProcessButtonDefaultValues.fontColor ??
-        onPrimaryColor;
+
     focusColor = widget.focusColor ??
         themeData?.focusColor ??
         OnProcessButtonDefaultValues.focusColor;
@@ -485,7 +723,8 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         OnProcessButtonDefaultValues.margin;
     contentPadding = widget.contentPadding ??
         themeData?.contentPadding ??
-        OnProcessButtonDefaultValues.contentPadding;
+        OnProcessButtonDefaultValues.contentPadding ??
+        const EdgeInsets.symmetric(horizontal: 12, vertical: 4);
     constraints = widget.constraints ??
         themeData?.constraints ??
         OnProcessButtonDefaultValues.constraints;
@@ -512,14 +751,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         themeData?.fontWeight ??
         OnProcessButtonDefaultValues.fontWeight ??
         FontWeight.bold;
-    textStyle = widget.textStyle ??
-        themeData?.textStyle ??
-        OnProcessButtonDefaultValues.textStyle ??
-        Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: fontColor,
-              fontWeight: fontWeight,
-            ) ??
-        const TextStyle();
+
     textAlign = widget.textAlign ??
         themeData?.textAlign ??
         OnProcessButtonDefaultValues.textAlign ??
@@ -562,226 +794,34 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         true;
   }
 
-  Color get primaryColor => useMaterial3
-      ? Theme.of(context).colorScheme.primary
-      : Theme.of(context).primaryColor;
-  Color get onPrimaryColor => useMaterial3
-      ? Theme.of(context).colorScheme.onPrimary
-      : Theme.of(context).canvasColor;
+  void ___setNotFinalVariables(BuildContext context) {
+    Color primaryColor() => useMaterial3
+        ? Theme.of(context).colorScheme.primary
+        : Theme.of(context).primaryColor;
+    Color onPrimaryColor() => useMaterial3
+        ? Theme.of(context).colorScheme.onPrimary
+        : Theme.of(context).canvasColor;
 
-  Widget statusChild(Widget c) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: iconHeight ?? 24,
-              maxWidth: iconHeight ?? 24,
-            ),
-            height: iconHeight ?? ____contentHeight,
-            width: iconHeight ?? ____contentHeight,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: c,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    backgroundColor = widget.backgroundColor ??
+        themeData?.backgroundColor ??
+        OnProcessButtonDefaultValues.backgroundColor ??
+        primaryColor();
+    iconColor = widget.iconColor ??
+        themeData?.iconColor ??
+        OnProcessButtonDefaultValues.iconColor ??
+        onPrimaryColor();
+    fontColor = widget.fontColor ??
+        themeData?.fontColor ??
+        OnProcessButtonDefaultValues.fontColor ??
+        onPrimaryColor();
 
-  Widget child(BuildContext context) {
-    Color c = iconColor;
-
-    if (isRunning == _ButtonStatus.running && showRunningStatusWidget) {
-      return onRunningWidget ??
-          statusChild(CircularProgressIndicator(color: c));
-    }
-    if (isRunning == _ButtonStatus.success) {
-      return onSuccessWidget ?? statusChild(Icon(Icons.done, color: c));
-    }
-    if (isRunning == _ButtonStatus.error) {
-      return onErrorWidget ?? statusChild(Icon(Icons.error, color: c));
-    }
-
-    return widget.child ?? const SizedBox();
-  }
-
-  BoxDecoration boxDecoration() {
-    BorderRadius borderRadius_ = borderRadius;
-
-    if (roundBorderWhenRunning && isRunning != _ButtonStatus.stable) {
-      borderRadius_ = BorderRadius.circular(MediaQuery.of(context).size.height);
-    }
-
-    return BoxDecoration(
-      borderRadius: borderRadius_,
-      border: widget.border,
-      boxShadow: widget.boxShadow,
-      color: widget.boxShadow == null
-          ? null
-          : Theme.of(context).colorScheme.surface,
-    );
-  }
-
-  double get _____buttonConstraints {
-    BoxConstraints c = widget.constraints ??
-        BoxConstraints(
-          minHeight: Theme.of(context).buttonTheme.height -
-              (widget.border?.top.width ?? 0) -
-              (widget.border?.bottom.width ?? 0),
-        );
-    return min(c.minHeight, c.minHeight);
-  }
-
-  double get ____contentHeight {
-    double f = _____buttonConstraints - ((contentPadding?.vertical ?? 0) * 2);
-    double fontSize = textStyle.fontSize ?? 0;
-    double height = textStyle.height ?? 0;
-    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) -
-        MediaQuery.of(context).textScaler.scale(height);
-    if (f < fontSize) f = fontSize;
-    return f;
-  }
-
-  EdgeInsetsGeometry? get _____padding {
-    if (isRunning != _ButtonStatus.stable) {
-      return EdgeInsets.all((contentPadding?.vertical ?? 0) / 2);
-    }
-
-    return contentPadding;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) {
-        if (onHover != null) onHover!(true);
-      },
-      onExit: (_) {
-        if (onHover != null) onHover!(false);
-      },
-      onHover: onHovering,
-      child: Container(
-        margin: margin,
-        clipBehavior: Clip.antiAlias,
-        decoration: boxDecoration(),
-        child: Material(
-          color: backgroundColor,
-          child: InkWell(
-            onLongPress: onLongPress,
-            onTapUp: onTapUp,
-            onTapDown: onTapDown,
-            onTapCancel: onTapCancel,
-            autofocus: autofocus,
-            splashColor: splashColor,
-            enableFeedback: enableFeedback,
-            focusNode: focusNode,
-            focusColor: focusColor,
-            highlightColor: highlightColor,
-            hoverColor: hoverColor,
-            mouseCursor: mouseCursor,
-            onDoubleTap: onDoubleTap,
-            onFocusChange: onFocusChange,
-            onHighlightChanged: onHighlightChanged,
-            onSecondaryTap: onSecondaryTap,
-            onSecondaryTapUp: onSecondaryTapUp,
-            onSecondaryTapDown: onSecondaryTapDown,
-            onSecondaryTapCancel: onSecondaryTapCancel,
-            // overlayColor: widget.overlayColor,
-            splashFactory: splashFactory,
-            // statesController: widget.statesController,
-            onTap: !enable
-                ? null
-                : () async {
-                    if (!enable) return;
-                    if (isRunning != _ButtonStatus.stable) return;
-                    if (mounted) {
-                      setState(() => isRunning = _ButtonStatus.running);
-                    }
-                    if (onStatusChange != null) {
-                      onStatusChange!(1); // Running = 1
-                    }
-                    if (onTap != null) {
-                      result = await onTap!();
-                      if (result != null) {
-                        if (result! && mounted) {
-                          setState(() => isRunning = _ButtonStatus.success);
-                          if (onStatusChange != null) {
-                            onStatusChange!(2); // Success = 2
-                          }
-                        }
-                        if (!result! && mounted) {
-                          setState(() => isRunning = _ButtonStatus.error);
-                          if (onStatusChange != null) {
-                            onStatusChange!(-1); // Success = -1
-                          }
-                        }
-                        await Future<void>.delayed(statusShowingDuration);
-                      }
-                    }
-                    if (onDone != null) {
-                      if (mounted) {
-                        setState(() => isRunning = _ButtonStatus.running);
-                      }
-                      if (onStatusChange != null) {
-                        onStatusChange!(1);
-                      }
-                      await onDone!(result);
-                    }
-
-                    if (mounted) {
-                      setState(() => isRunning = _ButtonStatus.stable);
-                    }
-                    if (onStatusChange != null) {
-                      onStatusChange!(0); // Stable = 0
-                    }
-                  },
-            child: AnimatedSize(
-              alignment: animationAlignment,
-              duration: animationDuration,
-              child: DefaultTextStyle(
-                textAlign: textAlign,
-                textHeightBehavior: textHeightBehavior,
-                maxLines: textMaxLines,
-                overflow: textOverflow,
-                softWrap: textWrap,
-                textWidthBasis: textWidthBasis,
-                style: textStyle,
-                child: Container(
-                  height: height,
-                  width: width,
-                  padding: _____padding,
-                  constraints: widget.constraints ??
-                      BoxConstraints(
-                        minWidth: _____buttonConstraints,
-                        minHeight: _____buttonConstraints,
-                      ),
-                  alignment: isRunning == _ButtonStatus.stable
-                      ? expanded
-                          ? alignment
-                          : null
-                      : expandedIcon ?? expanded
-                          ? alignment
-                          : null,
-                  child: expanded
-                      ? child(context)
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            child(context),
-                          ],
-                        ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    textStyle = widget.textStyle ??
+        themeData?.textStyle ??
+        OnProcessButtonDefaultValues.textStyle ??
+        Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: fontColor,
+              fontWeight: fontWeight,
+            ) ??
+        const TextStyle();
   }
 }
-
-enum _ButtonStatus { stable, running, success, error }

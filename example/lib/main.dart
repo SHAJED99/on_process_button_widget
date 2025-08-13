@@ -3,6 +3,31 @@ import 'package:get/get.dart';
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 
 void main(List<String> args) {
+  OnProcessButtonDefaultValues.expandedIcon = true;
+  OnProcessButtonDefaultValues.roundBorderWhenRunning = false;
+  OnProcessButtonDefaultValues.onStatusChange = (cont, i) async {
+    if (cont == null) return;
+    if (i == OnProcessButtonStatus.running) {
+      showDialog(
+          context: cont,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Status Changed"),
+              content: const Text("The status of the button has changed."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          });
+    } else if (i == OnProcessButtonStatus.stable) {
+      Navigator.of(cont).pop();
+    }
+  };
   runApp(const MyApp());
 }
 

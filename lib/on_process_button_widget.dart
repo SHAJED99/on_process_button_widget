@@ -8,3 +8,4 @@ import 'package:flutter/material.dart';
 part 'src/on_process_button_model.dart';
 part 'src/on_process_button_theme.dart';
 part 'src/on_process_button_widget.dart';
+part 'src/status_enum.dart';
