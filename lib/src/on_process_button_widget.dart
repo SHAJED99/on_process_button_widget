@@ -1,8 +1,12 @@
 part of '../on_process_button_widget.dart';
 
+/// A customizable button widget that provides visual feedback for
+/// asynchronous operations.
 class OnProcessButtonWidget extends StatefulWidget {
-  /// A customizable button widget that provides visual feedback for asynchronous operations.
-  /// It supports various states like running, success, and error, with customizable animations,
+  /// A customizable button widget that provides visual feedback for
+  /// asynchronous operations.
+  /// It supports various states like running, success, and error, with
+  /// customizable animations,
   /// styling, and callback functions for different user interactions.
   const OnProcessButtonWidget({
     Key? key,
@@ -73,13 +77,16 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for long press
   final void Function()? onLongPress;
 
-  /// Callback function for changing button status. Running = 1, Success = 2, Success = -1, Stable = 0
+  /// Callback function for changing button status. Running = 1, Success = 2,
+  /// Success = -1, Stable = 0
   final Function(int i)? onStatusChange;
 
-  /// Callback function for pressing. Returns a Future<bool?> indicating success or failure.
-  final Future<bool?> Function()? onTap;
+  /// Callback function for pressing. Returns a Future<bool?> indicating
+  /// success or failure.
+  final Future<bool?>? Function()? onTap;
 
-  /// Callback function. It is called when the onTap is done. `isSuccess` is true if the operation was successful, false otherwise.
+  /// Callback function. It is called when the onTap is done. `isSuccess` is
+  /// true if the operation was successful, false otherwise.
   final Function(bool? isSuccess)? onDone;
 
   /// Callback function for tapping up
@@ -91,7 +98,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for cancelling tap
   final void Function()? onTapCancel;
 
-  /// Callback function showing hovering status. `isEnter` is true if the mouse pointer enters the button, false if it exits.
+  /// Callback function showing hovering status. `isEnter` is true if the mouse
+  /// pointer enters the button, false if it exits.
   final Function(bool isEnter)? onHover;
 
   /// Callback function showing hovering offset
@@ -100,10 +108,12 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Callback function for double tap
   final void Function()? onDoubleTap;
 
-  /// Callback function runs when focus is changed. `isFocused` is true if the button gains focus, false otherwise.
+  /// Callback function runs when focus is changed. `isFocused` is true if the
+  /// button gains focus, false otherwise.
   final void Function(bool isFocused)? onFocusChange;
 
-  /// Callback function runs when high light is changed. `isHighlighted` is true if the button is highlighted, false otherwise.
+  /// Callback function runs when high light is changed. `isHighlighted` is
+  /// true if the button is highlighted, false otherwise.
   final void Function(bool isHighlighted)? onHighlightChanged;
 
   /// Callback function for Secondary Tap
@@ -168,7 +178,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Button pressing feedback showing
   final bool? enableFeedback;
 
-  /// Button width is expanded or not. If `true`, the button will take the full available width.
+  /// Button width is expanded or not. If `true`, the button will take the full
+  /// available width.
   final bool? expanded;
 
   /// On processing and status showing indicator is expanded or not
@@ -200,7 +211,8 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Button icon height
   final double? iconHeight;
 
-  /// If the app is doing some work and wants to show a loading indicator, use this with the passing key
+  /// If the app is doing some work and wants to show a loading indicator,
+  /// use this with the passing key
   final bool isRunning;
 
   /// Margin
@@ -258,7 +270,8 @@ class OnProcessButtonWidget extends StatefulWidget {
 
   /// Button text style.
   /// Default:
-  ///   Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).canvasColor, fontWeight: FontWeight.bold)
+  ///   Theme.of(context).textTheme.titleMedium?.copyWith(color:
+  ///   Theme.of(context).canvasColor, fontWeight: FontWeight.bold)
   final TextStyle? textStyle;
 
   /// Button text width basis
@@ -288,7 +301,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   late final void Function()? onLongPress;
   late final Function(int i)? onStatusChange;
-  late final Future<bool?> Function()? onTap;
+  late final Future<bool?>? Function()? onTap;
   late final Function(bool? isSuccess)? onDone;
   late final void Function(TapUpDetails tapUpDetails)? onTapUp;
   late final void Function(TapDownDetails tapDownDetails)? onTapDown;
@@ -351,7 +364,8 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     isRunning = widget.isRunning ? _ButtonStatus.running : _ButtonStatus.stable;
 
     // Get theme data if available
-    final themeData = OnProcessButtonTheme.of(context);
+    final OnProcessButtonThemeData? themeData =
+        OnProcessButtonTheme.of(context);
 
     onLongPress = widget.onLongPress ??
         themeData?.onLongPress ??
@@ -560,7 +574,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
       fit: BoxFit.scaleDown,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Container(
             constraints: BoxConstraints(
               maxHeight: iconHeight ?? 24,
@@ -613,11 +627,12 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   double get _____buttonConstraints {
-    var c = widget.constraints ??
+    BoxConstraints c = widget.constraints ??
         BoxConstraints(
-            minHeight: Theme.of(context).buttonTheme.height -
-                (widget.border?.top.width ?? 0) -
-                (widget.border?.bottom.width ?? 0));
+          minHeight: Theme.of(context).buttonTheme.height -
+              (widget.border?.top.width ?? 0) -
+              (widget.border?.bottom.width ?? 0),
+        );
     return min(c.minHeight, c.minHeight);
   }
 
@@ -704,7 +719,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                             onStatusChange!(-1); // Success = -1
                           }
                         }
-                        await Future.delayed(statusShowingDuration);
+                        await Future<void>.delayed(statusShowingDuration);
                       }
                     }
                     if (onDone != null) {
@@ -741,8 +756,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                   padding: _____padding,
                   constraints: widget.constraints ??
                       BoxConstraints(
-                          minWidth: _____buttonConstraints,
-                          minHeight: _____buttonConstraints),
+                        minWidth: _____buttonConstraints,
+                        minHeight: _____buttonConstraints,
+                      ),
                   alignment: isRunning == _ButtonStatus.stable
                       ? expanded
                           ? alignment
@@ -754,7 +770,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                       ? child(context)
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: <Widget>[
                             child(context),
                           ],
                         ),

@@ -2,6 +2,8 @@ part of '../on_process_button_widget.dart';
 
 /// Theme data class that holds all the default values for OnProcessButtonWidget
 class OnProcessButtonThemeData {
+  /// Creates a new instance of [OnProcessButtonThemeData] with the provided
+  /// values.
   const OnProcessButtonThemeData({
     // Callback Functions
     this.onLongPress,
@@ -84,7 +86,7 @@ class OnProcessButtonThemeData {
 
   /// Called when the button is tapped.
   /// Should return `true` if operation is successful.
-  final Future<bool?> Function()? onTap;
+  final Future<bool?>? Function()? onTap;
 
   /// Called after [onTap] completes.
   /// `isSuccess` is true if the operation was successful, false otherwise.
@@ -100,7 +102,8 @@ class OnProcessButtonThemeData {
   final void Function()? onTapCancel;
 
   /// Called when the mouse pointer enters or exits the button.
-  /// `isEnter` is true if the mouse pointer enters the button, false if it exits.
+  /// `isEnter` is true if the mouse pointer enters the button, false if it
+  /// exits.
   final void Function(bool isEnter)? onHover;
 
   /// Called when the mouse pointer hovers over the button.
@@ -264,7 +267,8 @@ class OnProcessButtonThemeData {
   /// Default is `true`.
   final bool? showRunningStatusWidget;
 
-  /// Creates a copy of this theme data with the given fields replaced by new values.
+  /// Creates a copy of this theme data with the given fields replaced by new
+  /// values.
   OnProcessButtonThemeData copyWith({
     void Function()? onLongPress,
     Function(int i)? onStatusChange,
@@ -391,17 +395,29 @@ class OnProcessButtonThemeData {
   }
 }
 
-/// An inherited widget that provides OnProcessButtonThemeData to its descendants.
+/// An inherited widget that provides OnProcessButtonThemeData to its
+/// descendants.
 class OnProcessButtonTheme extends InheritedWidget {
+  /// Creates a new instance of [OnProcessButtonTheme] with the provided
+  /// theme data.
+  /// The [child] widget is the subtree that will have access to this theme.
   const OnProcessButtonTheme({
     Key? key,
     required this.data,
     required Widget child,
   }) : super(key: key, child: child);
 
+  /// The theme data for OnProcessButtonWidget.
+  /// This holds all the default values for the button's appearance and
+  /// behavior.
+  /// It can be overridden by providing a custom [OnProcessButtonThemeData]
+  /// when using [OnProcessButtonThemeProvider].
+  /// It is immutable and should be created using the
+  /// [OnProcessButtonThemeData] constructor
   final OnProcessButtonThemeData data;
 
-  /// Returns the [OnProcessButtonThemeData] from the closest [OnProcessButtonTheme] ancestor.
+  /// Returns the [OnProcessButtonThemeData] from the closest
+  /// [OnProcessButtonTheme] ancestor.
   /// If there is no ancestor, it returns null.
   static OnProcessButtonThemeData? of(BuildContext context) {
     final OnProcessButtonTheme? theme =
@@ -415,15 +431,32 @@ class OnProcessButtonTheme extends InheritedWidget {
   }
 }
 
-/// A convenience widget that provides OnProcessButtonThemeData to its descendants.
+/// A convenience widget that provides OnProcessButtonThemeData to its
+/// descendants.
 class OnProcessButtonThemeProvider extends StatelessWidget {
+  /// Creates a new instance of [OnProcessButtonThemeProvider] with themeData
   const OnProcessButtonThemeProvider({
     Key? key,
     required this.data,
     required this.child,
   }) : super(key: key);
 
+  /// The theme data for OnProcessButtonWidget.
+  /// This holds all the default values for the button's appearance and
+  /// behavior.
+  /// It can be overridden by providing a custom [OnProcessButtonThemeData]
+  /// when using [OnProcessButtonThemeProvider].
+  /// It is immutable and should be created using the
+  /// [OnProcessButtonThemeData] constructor
+  ///
+  /// The [child] widget is the subtree that will have access to this theme.
+  /// It should be a widget that uses [OnProcessButtonWidget] or its
+  /// descendants.
   final OnProcessButtonThemeData data;
+
+  /// The child widget that will have access to this theme.
+  /// This should be a widget that uses [OnProcessButtonWidget] or its
+  /// descendants.
   final Widget child;
 
   @override

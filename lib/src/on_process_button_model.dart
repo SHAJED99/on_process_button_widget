@@ -19,7 +19,7 @@ class OnProcessButtonDefaultValues {
 
   /// Called when the button is tapped.
   /// Should return `true` if operation is successful.
-  static Future<bool?> Function()? onTap;
+  static Future<bool?>? Function()? onTap;
 
   /// Called after [onTap] completes.
   /// `isSuccess` is true if the operation was successful, false otherwise.
@@ -35,7 +35,8 @@ class OnProcessButtonDefaultValues {
   static void Function()? onTapCancel;
 
   /// Called when the mouse pointer enters or exits the button.
-  /// `isEnter` is true if the mouse pointer enters the button, false if it exits.
+  /// `isEnter` is true if the mouse pointer enters the button, false if it
+  /// exits.
   static void Function(bool isEnter)? onHover;
 
   /// Called when the mouse pointer hovers over the button.

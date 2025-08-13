@@ -1,4 +1,42 @@
 include: package:flutter_lints/flutter.yaml
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+linter:
+  rules:
+    #! Type safety and readability
+    - always_specify_types
+    - avoid_dynamic_calls
+    - avoid_null_checks_in_equality_operators
+    - prefer_final_in_for_each
+
+    #! Code style and formatting
+    - prefer_const_constructors
+    - prefer_final_fields
+    - prefer_single_quotes
+    - require_trailing_commas
+
+    #! Best practices
+    - avoid_print
+    - prefer_typing_uninitialized_variables
+    - avoid_setters_without_getters
+    - sort_constructors_first
+    - lines_longer_than_80_chars
+
+    #! Documentation
+    - public_member_api_docs
+    - comment_references
+
+    #! Performance
+    - use_decorated_box
+    - unnecessary_this
+    - prefer_const_literals_to_create_immutables
+
+analyzer:
+  exclude:
+    #! Ignore generated files
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+
+  #! Custom settings
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
