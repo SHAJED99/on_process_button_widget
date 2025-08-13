@@ -53,3 +53,11 @@
 ## 2.0.8
 
 - Introducing Parent theme and Global Theme. Now you can use your theme globally from the app. So you do not need to add the theme everywhere inside the Project.
+
+## 2.0.9
+
+- Added comprehensive API documentation for all public variables and classes
+- Improved class-level documentation for OnProcessButtonWidget
+- Enhanced documentation clarity for callback functions and their parameters
+- Added detailed descriptions for appearance and layout properties
+- Included default value documentation for themed properties
