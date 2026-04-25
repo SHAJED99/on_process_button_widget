@@ -1,158 +1,129 @@
-# On Process Button Widget
+# OnProcessButtonWidget
 
-A button with many functionalities
+📦 A powerful Flutter button widget with loading states, hover effects, and request status handling.
 
-![Example - on_process_button_widget](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/all.gif)
+[![Pub Version](https://img.shields.io/pub/v/on_process_button_widget?style=flat-square)](https://pub.dev/packages/on_process_button_widget)
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?style=flat-square)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-blue?style=flat-square)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-BSD--3-blue?style=flat-square)](LICENSE)
 
+---
 
-### NOTE
-Now Material 3 theme is enabled.
+## ✨ Features
 
-## Getting Started
+- ⏳ **Loading States** — Built-in loading indicator during async operations
+- 🖱️ **Hover Effects** — Mouse hover text/animation changes
+- ✅❌ **Request Status** — Handle success/failure states visually
+- 🔄 **Double Process** — Two-step confirmation flows
+- 🎨 **Material 3** — Native Material 3 theming support
+- 📐 **Button-Matched Height** — Matches `OnTextInputWidget` for cohesive forms
 
-To use the `on_process_button_widget` widget in your project, follow these steps:
+---
 
-1. Install the widget according to the instructions on the install page
+## 🚀 Installation
 
-2. Add this code in your project
-```dart
-    OnProcessButtonWidget()
+```yaml
+dependencies:
+  on_process_button_widget: ^latest
 ```
 
-3. For better understanding follow the example
-
-## Customizing the button
-
-### Hovering effect
-
 ```dart
-    //! Hovering effect && On processing loading indicator
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF86A789),
-        onTap: () async => await onCallFunction(),
-        onHover: (isEnter) => buttonText.value = isEnter ? "Hi" : "Hover Here - Only works in Mouse hovering.",
-        child: Text(buttonText.value),
-    ),
+import 'package:on_process_button_widget/on_process_button_widget.dart';
 ```
 
-### Example - Hovering effect && On processing loading indicator
+---
 
-![Example - Hovering effect && On processing loading indicator](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/hover.gif)
-
-
-### Request status
+## 🎯 Quick Start
 
 ```dart
-    //! Request status - true and false
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF739072),
-        onTap: () async => await onCallFunction(type: true),
-        // onTap: () async => await onCallFunction(type: false),
-        child: const Text("Request status - true"),
-    ),
-
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF739072),
-        onTap: () async => await onCallFunction(type: false),
-        // onTap: () async => await onCallFunction(type: false),
-        child: const Text("Request status - false"),
-    ),
+OnProcessButtonWidget(
+  onTap: () async {
+    // Handle button press
+    await fetchData();
+  },
+  child: Text("Submit"),
+)
 ```
 
-### Example - Request status - true and false
+---
 
-![Example - Request status - true and false](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/status.gif)
+## 📱 Demo
 
-### Double process
+| Loading | Status | Hover |
+|---------|--------|-------|
+| ![All](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/all.gif) | ![Status](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/status.gif) | ![Hover](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/hover.gif) |
+
+---
+
+## 💡 Usage Examples
+
+### Loading State with Hover Text
 
 ```dart
-    //! Double process
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF4F6F52),
-        onTap: () async {
-        processDone.value = "Running first task.";
-        var s = await onCallFunction(type: true);
-        processDone.value = "First operation status $s";
-        return s;
-        },
-        onDone: (isSuccess) async {
-        // TODO: You can your homepage here. If onTap function (Login process) return true it will redirect to the homepage.
-        processDone.value = "Running second task.";
-        await onCallFunction();
-        processDone.value = "";
-        },
-        child: const Text("Double process"),
-    ),
-    if (processDone.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text("Process status: ${processDone.value}")),
+OnProcessButtonWidget(
+  backgroundColor: Color(0XFF86A789),
+  onTap: () async => await onCallFunction(),
+  onHover: (isEnter) => buttonText.value = 
+    isEnter ? "Hi" : "Hover Here",
+  child: Text(buttonText.value),
+)
 ```
 
-### Example - Double process
-
-![Example - Double process](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/double.gif)
-
-### Easily customizable
+### Request Status (Success/Failure)
 
 ```dart
-    //! Shadow and Icon color can be changed
-    OnProcessButtonWidget(
-        iconColor: Colors.white,
-        backgroundColor: const Color(0XFF3A4D39),
-        onTap: () async => await onCallFunction(type: false),
-        boxShadow: const [
-        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
-        ],
-        child: const Text("My shadow and Icon color can be changed"),
-    ),
+OnProcessButtonWidget(
+  backgroundColor: Color(0XFF739072),
+  onTap: () async => await onCallFunction(type: true), // success
+  child: Text("Success State"),
+)
 
-    //! On processing widget is changeable
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFFFAE7C9),
-        onTap: () async => await onCallFunction(type: true),
-        onRunningWidget: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-            Text(
-            "On processing widget is changed",
-            style: TextStyle(color: Colors.black),
-            ),
-        ],
-        ),
-        onSuccessWidget: const Icon(
-        Icons.wallpaper_rounded,
-        color: Colors.black,
-        ),
-        child: const Text(
-        "On processing and Status widget",
-        style: TextStyle(color: Colors.black),
-        ),
-    ),
+OnProcessButtonWidget(
+  backgroundColor: Color(0XFF739072),
+  onTap: () async => await onCallFunction(type: false), // failure
+  child: Text("Error State"),
+)
 ```
 
-### Example - Easily customizable
-
-![Example - Easily customizable](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/style.gif)
-
-### Use as a card
+### With Form Validation
 
 ```dart
-    //! Use as a card
-    const OnProcessButtonWidget(
-        enable: false,
-        contentPadding: EdgeInsets.symmetric(vertical: 24),
-        backgroundColor: Color.fromARGB(255, 242, 242, 242),
-        boxShadow: [
-        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
-        ],
-        child: Text(
-        "I am a Button,\nBut I can be used as a card.",
-        style: TextStyle(color: Colors.black),
-        ),
-    ),
+OnProcessButtonWidget(
+  onDone: (isSuccess) {
+    _formKey.currentState?.validate();
+  },
+  child: Text("Validate & Submit"),
+)
 ```
 
-### Example - Use as a card
+---
 
-![Example - Use as a card](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/card.gif)
+## 🛠️ Configuration Options
 
-###
-And many more.
+| Property | Type | Description |
+|----------|------|-------------|
+| `onTap` | `Future<void> Function()?` | Async tap handler |
+| `onHover` | `void Function(bool)?` | Hover enter/exit callback |
+| `backgroundColor` | `Color?` | Button background |
+| `onDone` | `void Function(bool)?` | Completion callback |
+| `child` | `Widget?` | Button content |
+
+---
+
+## 📦 Related Packages
+
+| Package | Description |
+|---------|-------------|
+| [`on_text_input_widget`](https://github.com/SHAJED99/on_text_input_widget) | Text input with search & validation |
+| [`on_popup_window_widget`](https://github.com/SHAJED99/on_popup_window_widget) | Popup dialog widget |
+| [`time_range_selector_widget`](https://github.com/SHAJED99/time_range_selector_widget) | Time range picker |
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! Open an issue or submit a PR.
+
+## 📄 License
+
+BSD 3-Clause License — see [LICENSE](LICENSE)
