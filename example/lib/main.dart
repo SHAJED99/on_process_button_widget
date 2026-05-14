@@ -101,7 +101,8 @@ class _MyAppState extends State<MyApp> {
 
                     //! Double process
                     OnProcessButtonWidget(
-                      backgroundColor: const Color(0XFF4F6F52).withOpacity(0.5),
+                      backgroundColor:
+                          const Color(0XFF4F6F52).withValues(alpha: 0.5),
                       onTap: () async {
                         processDone.value = "Running first task.";
                         var s = await onCallFunction(type: true);

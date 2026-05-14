@@ -1,25 +1,24 @@
 # ⚡ OnProcessButtonWidget
 
-> A sleek, production-ready Flutter button widget with built-in loading states, progress indicators, and tap feedback.
+> A sleek, production-ready Flutter button widget with built-in loading states, progress indicators, and status feedback (Success/Error).
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
-![Pub](https://img.shields.io/badge/Pub-1.0.0-blue?style=flat-square)
+![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat&logo=dart&logoColor=white)
+![License](https://img.shields.io/badge/license-BSD--3--Clause-green.svg)
+![Pub](https://img.shields.io/badge/pub-2.0.12-blue.svg)
 
-📦 **Ready for pub.dev!** Drop-in replacement for Flutter's `ElevatedButton`, `OutlinedButton`, and `TextButton` with superpowers.
+📦 **Ready for pub.dev!** A highly customizable replacement for standard buttons that handles asynchronous operations with ease.
 
 ---
 
 ## ✨ Features
 
-- ⏳ **Loading State** — Built-in circular progress indicator, disables button while loading
-- 🎨 **Customizable** — Colors, radius, elevation, borders, icons, shadows
-- 🚫 **Disabled State** — Auto-disabled during loading with configurable opacity
-- 🔄 **Loading Text** — Swap label with "Processing..." while loading
-- 🎯 **Ripple Effect** — Material ripple on tap
-- 💫 **Scale Animation** — Shrinks slightly on press for tactile feedback
-- 📱 **Platform Ready** — Android, iOS, Web, macOS, Windows, Linux
+- ⏳ **Loading State** — Built-in progress indicator, auto-disables button during execution.
+- ✅ **Status Feedback** — Displays Success or Error icons/widgets based on operation result.
+- 🎨 **Deeply Customizable** — Control colors, radius, borders, shadows, animations, and icons.
+- 🔄 **Theme Support** — Global configuration via `OnProcessButtonTheme` or `OnProcessButtonDefaultValues`.
+- 💫 **Smooth Animations** — Animated size transitions and status changes.
+- 📱 **Platform Ready** — Supports Android, iOS, Web, macOS, Windows, and Linux.
 
 ---
 
@@ -33,7 +32,7 @@ Or add manually to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  on_process_button_widget: ^1.0.0
+  on_process_button_widget: ^2.0.12
 ```
 
 ---
@@ -43,147 +42,102 @@ dependencies:
 ```dart
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 
-// Basic usage — just wrap your async action
-OnProcessButton(
-  onPressed: () async {
+// Basic usage — return true for success, false for error
+OnProcessButtonWidget(
+  onTap: () async {
     await Future.delayed(Duration(seconds: 2));
-    print('Action complete!');
+    return true; // Shows success icon
   },
   child: Text('Submit'),
 )
 
-// With custom text during loading
-OnProcessButton(
-  loadingText: 'Submitting...',
-  child: Text('Submit'),
-  onPressed: () => submitForm(),
-)
-
-// With icon
-OnProcessButton.icon(
-  icon: Icons.send,
-  label: 'Send',
-  onPressed: () => sendMessage(),
+// With full customization
+OnProcessButtonWidget(
+  backgroundColor: Colors.blue,
+  iconColor: Colors.white,
+  onTap: () async {
+    bool success = await myAsyncOperation();
+    return success;
+  },
+  onDone: (isSuccess) {
+    print('Operation finished with success: $isSuccess');
+  },
+  child: Text('Save Changes'),
 )
 ```
 
 ---
 
-## 🎛️ Properties
+## 🎛️ Key Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `onPressed` | `AsyncCallback?` | `required` | Async press handler |
-| `child` | `Widget` | `required` | Button content |
-| `loadingText` | `String?` | `null` | Text shown while loading |
-| `loadingColor` | `Color` | `Colors.white` | Spinner color |
-| `loadingSize` | `double` | `20.0` | Spinner diameter |
-| `borderRadius` | `double` | `8.0` | Button radius |
-| `backgroundColor` | `Color` | `null` | Button background |
-| `foregroundColor` | `Color` | `null` | Text/icon color |
-| `elevation` | `double` | `2.0` | Shadow elevation |
-| `enabled` | `bool` | `true` | Enable/disable |
-| `height` | `double` | `48.0` | Button height |
-| `width` | `double` | `null` | Button width (full if null) |
+| `onTap` | `Future<bool?> Function()?` | `null` | Async tap handler. Return `true` for success, `false` for error. |
+| `onDone` | `Function(bool?)?` | `null` | Called after `onTap` and status display completion. |
+| `child` | `Widget?` | `null` | Primary button content. |
+| `isRunning` | `bool` | `false` | Manually trigger loading state. |
+| `backgroundColor` | `Color?` | `Theme primary` | Button background color. |
+| `borderRadius` | `BorderRadius?` | `8.0` | Corner radius. |
+| `onRunningWidget` | `Widget?` | `CircularProgress` | Widget shown while processing. |
+| `onSuccessWidget` | `Widget?` | `Icons.done` | Widget shown on success. |
+| `onErrorWidget` | `Widget?` | `Icons.error` | Widget shown on error. |
+| `expanded` | `bool` | `true` | Whether to take full available width. |
 
 ---
 
-## 🎨 Customization Examples
+## 🎨 Global Configuration
 
-### Primary Button (Full Width)
+You can set default values for all buttons in your app using `OnProcessButtonDefaultValues` or `OnProcessButtonThemeProvider`.
+
 ```dart
-OnProcessButton(
-  width: double.infinity,
-  backgroundColor: Color(0xFF6C63FF),
-  borderRadius: 12,
-  child: Text(
-    'Sign In',
-    style: TextStyle(color: Colors.white, fontSize: 16),
-  ),
-  onPressed: () => signIn(),
-)
+void main() {
+  // Simple property defaults
+  OnProcessButtonDefaultValues.backgroundColor = Colors.deepPurple;
+  OnProcessButtonDefaultValues.borderRadius = BorderRadius.circular(12);
+  OnProcessButtonDefaultValues.expandedIcon = true;
+  OnProcessButtonDefaultValues.roundBorderWhenRunning = false;
+
+  // Global status change listener (e.g., showing a dialog during processing)
+  OnProcessButtonDefaultValues.onStatusChange = (context, status) {
+    if (context == null) return;
+
+    if (status == OnProcessButtonStatus.running) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Text("Processing"),
+          content: Text("Please wait while we handle your request..."),
+        ),
+      );
+    } else if (status == OnProcessButtonStatus.stable) {
+      // Auto-close dialog when finished
+      Navigator.of(context).pop();
+    }
+  };
+
+  runApp(MyApp());
+}
 ```
 
-### Outlined Style
-```dart
-OnProcessButton(
-  backgroundColor: Colors.transparent,
-  foregroundColor: Color(0xFF6C63FF),
-  border: Border.all(color: Color(0xFF6C63FF), width: 2),
-  borderRadius: 12,
-  child: Text('View Details'),
-  onPressed: () => openDetails(),
-)
-```
-
-### Icon Button (Circular)
-```dart
-OnProcessButton.icon(
-  width: 56,
-  height: 56,
-  borderRadius: 28,
-  backgroundColor: Color(0xFF2196F3),
-  icon: Icons.favorite,
-  loadingIcon: Icons.favorite_border,
-  onPressed: () => toggleLike(),
-)
-```
-
-### Upload Button with Progress
-```dart
-OnProcessButton(
-  icon: Icons.cloud_upload,
-  label: 'Upload Document',
-  loadingLabel: 'Uploading...',
-  backgroundColor: Color(0xFF4CAF50),
-  borderRadius: 8,
-  onPressed: () => uploadFile(),
-)
-```
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Demos
 
-| Default | Loading | Disabled |
-|---------|---------|----------|
-| ![Default](screenshots/default.png) | ![Loading](screenshots/loading.png) | ![Disabled](screenshots/disabled.png) |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing`)
-5. Open a Pull Request
+| All Features | Hover Effects |
+|:---:|:---:|
+| ![All](screenshots/all.gif) | ![Hover](screenshots/hover.gif) |
+| **Request Status** | **Double Process** |
+| ![Status](screenshots/status.gif) | ![Double](screenshots/double.gif) |
+| **Custom Styles** | **Card Mode** |
+| ![Style](screenshots/style.gif) | ![Card](screenshots/card.gif) |
 
 ---
 
 ## 📄 License
 
-```
-MIT License
-Copyright (c) 2024 Shajedur Rahman Panna
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
