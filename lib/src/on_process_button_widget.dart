@@ -82,6 +82,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.useMaterial3,
     this.fontColor,
     this.animationAlignment,
+    this.showRunningStatusWidget,
   }) : super(key: key);
 
   /// Called when the button is long-pressed.
@@ -112,7 +113,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// displayed for [statusShowingDuration].
   ///
   /// `isSuccess` will be the boolean result returned by [onTap].
-  final Function(bool? isSuccess)? onDone;
+  final void Function(bool? isSuccess)? onDone;
 
   /// Called when a tap up event occurs.
   final void Function(TapUpDetails tapUpDetails)? onTapUp;
@@ -124,7 +125,7 @@ class OnProcessButtonWidget extends StatefulWidget {
   final void Function()? onTapCancel;
 
   /// Called when the mouse pointer enters or exits the button area.
-  final Function(bool isEnter)? onHover;
+  final void Function(bool isEnter)? onHover;
 
   /// Called when the mouse pointer moves within the button area.
   final void Function(PointerHoverEvent offset)? onHovering;
@@ -287,6 +288,10 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Whether to use Material 3 styling defaults.
   final bool? useMaterial3;
 
+  /// Whether to show the running status widget.
+  /// Default is `true`.
+  final bool? showRunningStatusWidget;
+
   /// Fixed width for the button.
   final double? width;
 
@@ -303,7 +308,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late void Function(BuildContext? context, OnProcessButtonStatus i)?
       onStatusChange;
   late Future<bool?>? Function()? onTap;
-  late Function(bool? isSuccess)? onDone;
+  late void Function(bool? isSuccess)? onDone;
   late void Function(TapUpDetails tapUpDetails)? onTapUp;
   late void Function(TapDownDetails tapDownDetails)? onTapDown;
   late void Function()? onTapCancel;
@@ -435,9 +440,9 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
     return BoxDecoration(
       borderRadius: borderRadius_,
-      border: widget.border,
-      boxShadow: widget.boxShadow,
-      color: widget.boxShadow == null
+      border: border,
+      boxShadow: boxShadow,
+      color: boxShadow == null
           ? null
           : Theme.of(context).colorScheme.surface,
     );
@@ -447,8 +452,8 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     BoxConstraints c = widget.constraints ??
         BoxConstraints(
           minHeight: Theme.of(context).buttonTheme.height -
-              (widget.border?.top.width ?? 0) -
-              (widget.border?.bottom.width ?? 0),
+              (border?.top.width ?? 0) -
+              (border?.bottom.width ?? 0),
         );
     return c.minHeight;
   }
@@ -558,7 +563,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                       }
                     }
                     if (onDone != null) {
-                      await onDone!(result);
+                      onDone!(result);
                     }
 
                     if (mounted) {
@@ -794,7 +799,8 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     onErrorWidget = widget.onErrorWidget ??
         themeData?.onErrorWidget ??
         OnProcessButtonDefaultValues.onErrorWidget;
-    showRunningStatusWidget = themeData?.showRunningStatusWidget ??
+    showRunningStatusWidget = widget.showRunningStatusWidget ??
+        themeData?.showRunningStatusWidget ??
         OnProcessButtonDefaultValues.showRunningStatusWidget ??
         true;
   }

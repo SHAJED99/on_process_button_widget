@@ -91,7 +91,7 @@ class OnProcessButtonThemeData {
 
   /// Called after [onTap] completes.
   /// `isSuccess` is true if the operation was successful, false otherwise.
-  final Function(bool? isSuccess)? onDone;
+  final void Function(bool? isSuccess)? onDone;
 
   /// Called when a tap is released.
   final void Function(TapUpDetails tapUpDetails)? onTapUp;
@@ -275,7 +275,7 @@ class OnProcessButtonThemeData {
     void Function(BuildContext? context, OnProcessButtonStatus i)?
         onStatusChange,
     Future<bool?> Function()? onTap,
-    Function(bool? isSuccess)? onDone,
+    void Function(bool? isSuccess)? onDone,
     void Function(TapUpDetails tapUpDetails)? onTapUp,
     void Function(TapDownDetails tapDownDetails)? onTapDown,
     void Function()? onTapCancel,

@@ -50,9 +50,20 @@
 
 - Button Icon height fixed
 
-## 2.0.12
+## 2.0.8
 
-- **Documentation**: Fixed missing images and demo visuals in README.md.
+- Introducing Parent theme and Global Theme. Now you can use your theme globally from the app. So you do not need to add the theme everywhere inside the Project.
+
+## 2.0.9
+
+- Updated analysis options and improved linter rules.
+
+## 2.0.10
+
+- Improved class-level documentation for OnProcessButtonWidget.
+- Enhanced documentation clarity for callback functions and their parameters.
+- Added detailed descriptions for appearance and layout properties.
+- Included default value documentation for themed properties.
 
 ## 2.0.11
 
@@ -64,3 +75,7 @@
 - **Improvement**: Optimized widget lifecycle by moving property initialization to `initState`, `didChangeDependencies`, and `didUpdateWidget`.
 - **Improvement**: Updated SDK constraints to Flutter 3.16+ to support modern APIs like `TextScaler`.
 - **Testing**: Added a comprehensive suite of widget tests to ensure stability across all button states.
+
+## 2.0.12
+
+- **Documentation**: Fixed missing images and demo visuals in README.md.

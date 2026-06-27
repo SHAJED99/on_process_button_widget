@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Dart source files must use LF line endings
+*.dart text eol=lf

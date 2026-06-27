@@ -1,16 +1,12 @@
-# example
+# OnProcessButtonWidget Example
 
-A new Flutter project.
+Demonstrates all features of the `on_process_button_widget` package:
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Basic async button with success/error feedback
+- Hover effects
+- Double process chaining with `onDone`
+- Custom loading/success/error widgets
+- Shadow and icon color customization
+- Card mode (disabled button as a card)
+- Global configuration via `OnProcessButtonDefaultValues`
+- Border and sizing control

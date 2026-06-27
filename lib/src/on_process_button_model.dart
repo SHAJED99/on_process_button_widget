@@ -15,7 +15,7 @@ class OnProcessButtonDefaultValues {
   /// - `2` = success
   /// - `-1` = error
   /// - `0` = stable
-  static Function(BuildContext? context, OnProcessButtonStatus i)?
+  static void Function(BuildContext? context, OnProcessButtonStatus i)?
       onStatusChange;
 
   /// Called when the button is tapped.
@@ -24,7 +24,7 @@ class OnProcessButtonDefaultValues {
 
   /// Called after [onTap] completes.
   /// `isSuccess` is true if the operation was successful, false otherwise.
-  static Function(bool? isSuccess)? onDone;
+  static void Function(bool? isSuccess)? onDone;
 
   /// Called when a tap is released.
   static void Function(TapUpDetails tapUpDetails)? onTapUp;
