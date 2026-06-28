@@ -1,226 +1,214 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 
-void main(List<String> args) {
+void main() {
   OnProcessButtonDefaultValues.expandedIcon = true;
   OnProcessButtonDefaultValues.roundBorderWhenRunning = false;
-  OnProcessButtonDefaultValues.onStatusChange = (cont, i) async {
-    if (cont == null) return;
-    if (i == OnProcessButtonStatus.running) {
+  OnProcessButtonDefaultValues.onStatusChange = (context, status) {
+    if (context == null) return;
+    if (status == OnProcessButtonStatus.running) {
       showDialog(
-          context: cont,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Status Changed"),
-              content: const Text("The status of the button has changed."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          });
-    } else if (i == OnProcessButtonStatus.stable) {
-      Navigator.of(cont).pop();
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const AlertDialog(
+          title: Text('Processing'),
+          content: Text('Please wait...'),
+        ),
+      );
+    } else if (status == OnProcessButtonStatus.stable) {
+      Navigator.of(context).pop();
     }
   };
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final RxString buttonText = "Hover Here".obs;
-  final RxString processDone = "".obs;
-  final RxBool buttonRunning = true.obs;
-
-  double get defaultPadding => 24;
-
-  Future<bool?> onCallFunction({bool? type}) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return type;
-  }
-
-  final Widget _____spacing = const SizedBox(height: 8);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark),
-        // buttonTheme: const ButtonThemeData(height: 100),
-      ),
-      home: Scaffold(
-        body: SafeArea(
-          child: Obx(
-            () => Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                child: Column(
+      theme: ThemeData(useMaterial3: true),
+      home: const ExampleScreen(),
+    );
+  }
+}
+
+class ExampleScreen extends StatefulWidget {
+  const ExampleScreen({super.key});
+
+  @override
+  State<ExampleScreen> createState() => _ExampleScreenState();
+}
+
+class _ExampleScreenState extends State<ExampleScreen> {
+  String buttonText = 'Hover Here';
+  String processStatus = '';
+
+  Future<bool?> simulateAsync({bool? result, int seconds = 2}) async {
+    await Future.delayed(Duration(seconds: seconds));
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final spacing = const SizedBox(height: 12);
+
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // 1) Basic filled button with hover callback
+              OnProcessButtonWidget(
+                expanded: false,
+                backgroundColor: const Color(0xFF86A789),
+                onHover: (isEnter) {
+                  setState(() {
+                    buttonText = isEnter ? 'Hello!' : 'Hover Here';
+                  });
+                },
+                onTap: () async => await simulateAsync(),
+                child: Text(buttonText),
+              ),
+              spacing,
+
+              // 2) Show success icon
+              OnProcessButtonWidget(
+                backgroundColor: const Color(0xFF739072),
+                onTap: () async => await simulateAsync(result: true),
+                child: const Text('Return true → Success'),
+              ),
+              spacing,
+
+              // 3) Show error icon
+              OnProcessButtonWidget(
+                backgroundColor: const Color(0xFF739072),
+                onTap: () async => await simulateAsync(result: false),
+                child: const Text('Return false → Error'),
+              ),
+              spacing,
+
+              // 4) Double process — chain via onDone
+              OnProcessButtonWidget(
+                backgroundColor:
+                    const Color(0xFF4F6F52).withValues(alpha: 0.5),
+                onTap: () async {
+                  setState(() => processStatus = 'Running first task...');
+                  final success = await simulateAsync(result: true);
+                  setState(
+                      () => processStatus = 'First result: $success');
+                  return success;
+                },
+                onDone: (isSuccess) {
+                  setState(() => processStatus = 'Running second task...');
+                },
+                child: const Text('Double Process (onDone)'),
+              ),
+              if (processStatus.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(processStatus,
+                      style: const TextStyle(fontSize: 12)),
+                ),
+              spacing,
+
+              // 5) Shadow and custom icon color
+              OnProcessButtonWidget(
+                iconColor: Colors.white,
+                backgroundColor: const Color(0xFF3A4D39),
+                onTap: () async => await simulateAsync(result: false),
+                boxShadow: const [
+                  BoxShadow(
+                    offset: Offset(0, 2),
+                    color: Colors.black54,
+                    blurRadius: 2,
+                  ),
+                ],
+                child: const Text('Shadow + Icon Color'),
+              ),
+              spacing,
+
+              // 6) Custom running/success/error widgets
+              OnProcessButtonWidget(
+                backgroundColor: const Color(0xFFFAE7C9),
+                fontColor: Colors.black,
+                iconColor: Colors.black,
+                onTap: () async => await simulateAsync(result: true),
+                onRunningWidget: const Text('Loading...',
+                    style: TextStyle(color: Colors.black)),
+                onSuccessWidget: const Icon(Icons.wallpaper_rounded,
+                    color: Colors.black),
+                onErrorWidget: const Icon(Icons.warning_rounded,
+                    color: Colors.black),
+                child: const Text('Custom Status Widgets'),
+              ),
+              spacing,
+
+              // 7) Button as a card (disabled, no onTap)
+              const OnProcessButtonWidget(
+                enable: false,
+                contentPadding: EdgeInsets.symmetric(vertical: 24),
+                backgroundColor: Color(0xFFF2F2F2),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 2),
+                    color: Colors.black54,
+                    blurRadius: 2,
+                  ),
+                ],
+                child: Text(
+                  'I am a Button,\nBut I can be used as a Card.',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              spacing,
+
+              // 8) Compact icon button (returns null to skip status)
+              OnProcessButtonWidget(
+                height: 24,
+                width: 36,
+                borderRadius: BorderRadius.circular(6),
+                constraints: const BoxConstraints(),
+                contentPadding: const EdgeInsets.all(4),
+                onTap: () async {
+                  await Future.delayed(const Duration(seconds: 2));
+                  return null;
+                },
+                child: const FittedBox(
+                  child: Icon(Icons.done, color: Colors.white),
+                ),
+              ),
+              spacing,
+
+              // 9) Outlined button with border
+              OnProcessButtonWidget(
+                expanded: false,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  width: 2,
+                  color: Colors.red,
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                ),
+                backgroundColor: Colors.transparent,
+                iconColor: Colors.red,
+                fontColor: Colors.red,
+                fontWeight: FontWeight.normal,
+                onTap: () async {
+                  await Future.delayed(const Duration(seconds: 2));
+                  return true;
+                },
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    //! Hovering effect && On processing loading indicator
-                    OnProcessButtonWidget(
-                      expanded: false,
-                      backgroundColor: const Color(0XFF86A789),
-                      onTap: () async => await onCallFunction(),
-                      onHover: (isEnter) => buttonText.value = isEnter
-                          ? "Hi"
-                          : "Hover Here - Only works in Mouse hovering.",
-                      child: Text(buttonText.value),
-                    ),
-                    _____spacing,
-
-                    //! Request status - true and false
-                    OnProcessButtonWidget(
-                      backgroundColor: const Color(0XFF739072),
-                      onTap: () async => await onCallFunction(type: true),
-                      // onTap: () async => await onCallFunction(type: false),
-                      child: const Text("Request status - true"),
-                    ),
-                    _____spacing,
-
-                    OnProcessButtonWidget(
-                      backgroundColor: const Color(0XFF739072),
-                      onTap: () async => await onCallFunction(type: false),
-                      // onTap: () async => await onCallFunction(type: false),
-                      child: const Text("Request status - false"),
-                    ),
-                    _____spacing,
-
-                    //! Double process
-                    OnProcessButtonWidget(
-                      backgroundColor:
-                          const Color(0XFF4F6F52).withValues(alpha: 0.5),
-                      onTap: () async {
-                        processDone.value = "Running first task.";
-                        var s = await onCallFunction(type: true);
-                        processDone.value = "First operation status $s";
-                        return s;
-                      },
-                      onDone: (isSuccess) async {
-                        // TODO: You can your homepage here. If onTap function (Login process) return true it will redirect to the homepage.
-                        processDone.value = "Running second task.";
-                        await onCallFunction();
-                        processDone.value = "";
-                      },
-                      child: const Text("Double process"),
-                    ),
-                    if (processDone.isNotEmpty)
-                      Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text("Process status: ${processDone.value}")),
-                    _____spacing,
-
-                    //! Shadow and Icon color can be changed
-                    OnProcessButtonWidget(
-                      iconColor: Colors.white,
-                      backgroundColor: const Color(0XFF3A4D39),
-                      onTap: () async => await onCallFunction(type: false),
-                      boxShadow: const [
-                        BoxShadow(
-                            offset: Offset(0, 2),
-                            color: Colors.black54,
-                            blurRadius: 2)
-                      ],
-                      child:
-                          const Text("My shadow and Icon color can be changed"),
-                    ),
-                    _____spacing,
-
-                    //! On processing widget is changeable
-                    OnProcessButtonWidget(
-                      backgroundColor: const Color(0XFFFAE7C9),
-                      onTap: () async => await onCallFunction(type: true),
-                      onRunningWidget: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "On processing widget is changed",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                      onSuccessWidget: const Icon(
-                        Icons.wallpaper_rounded,
-                        color: Colors.black,
-                      ),
-                      child: const Text(
-                        "On processing and Status widget",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    _____spacing,
-
-                    //! Use as a card
-                    const OnProcessButtonWidget(
-                      enable: false,
-                      contentPadding: EdgeInsets.symmetric(vertical: 24),
-                      backgroundColor: Color.fromARGB(255, 242, 242, 242),
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 2),
-                            color: Colors.black54,
-                            blurRadius: 2)
-                      ],
-                      child: Text(
-                        "I am a Button,\nBut I can be used as a card.",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    _____spacing,
-
-                    OnProcessButtonWidget(
-                      height: defaultPadding,
-                      width: defaultPadding * 1.5,
-                      borderRadius: BorderRadius.circular(defaultPadding / 2),
-                      constraints: const BoxConstraints(),
-                      contentPadding: EdgeInsets.all(defaultPadding / 6),
-                      onTap: () async {
-                        await Future.delayed(const Duration(seconds: 3));
-                        return null;
-                      },
-                      child: FittedBox(
-                          child: Icon(Icons.done,
-                              color: Theme.of(context).colorScheme.surface)),
-                    ),
-
-                    Row(
-                      children: [
-                        Container(
-                          height: Theme.of(context).buttonTheme.height,
-                          width: 24,
-                          color: Colors.blue,
-                        ),
-                        OnProcessButtonWidget(
-                          borderRadius: BorderRadius.circular(0),
-                          border: Border.all(
-                              width: 2,
-                              color: Colors.red,
-                              strokeAlign: BorderSide.strokeAlignOutside),
-                          onTap: () async {
-                            await Future.delayed(const Duration(seconds: 2));
-                            return;
-                          },
-                          child: const Text("Press Me"),
-                        ),
-                      ],
-                    ),
+                    Icon(Icons.delete_outline, size: 18),
+                    SizedBox(width: 8),
+                    Text('Delete'),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

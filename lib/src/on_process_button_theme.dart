@@ -78,10 +78,6 @@ class OnProcessButtonThemeData {
   final void Function()? onLongPress;
 
   /// Called when the button status changes.
-  /// - `1` = running
-  /// - `2` = success
-  /// - `-1` = error
-  /// - `0` = stable
   final void Function(BuildContext? context, OnProcessButtonStatus i)?
       onStatusChange;
 
