@@ -1,6 +1,6 @@
 name: on_process_button_widget
 description: A highly customizable Flutter button with built-in loading animations and status feedback (Success/Error). Perfect for asynchronous operations and form submissions.
-version: 2.0.12
+version: 2.0.13
 homepage: https://github.com/SHAJED99/on_process_button_widget
 license: BSD 3-Clause
 

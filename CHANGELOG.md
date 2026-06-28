@@ -79,3 +79,12 @@
 ## 2.0.12
 
 - **Documentation**: Fixed missing images and demo visuals in README.md.
+
+## 2.0.13
+
+- **Bug Fix**: `boxDecoration()` and height calculation now use resolved `border`/`boxShadow` properties instead of raw widget values — theme/defaults-provided borders and shadows now render correctly.
+- **Feature**: `showRunningStatusWidget` now exposed as per-instance constructor parameter (previously only available via theme/defaults).
+- **Type Safety**: Replaced untyped `Function` declarations with explicit `void Function` return types for `onStatusChange`, `onDone`, and `onHover` callbacks.
+- **Infra**: `analysis_options.yaml` now uses `strict-casts` and `strict-inference` (Dart 3 style). SDK constraint aligned with `flutter_lints ^4.0.0` (`>=3.4.0`).
+- **Documentation**: Rewrote README with complete usage patterns and full API reference (all 67 properties in categorized tables, `OnProcessButtonStatus` enum, `OnProcessButtonDefaultValues`, `OnProcessButtonThemeData`, `copyWith()`, etc.). Added `AGENTS.md` for AI tooling.
+- **Example**: Rewrote example app without GetX dependency. 9 clean single-feature examples demonstrating all button styles.
