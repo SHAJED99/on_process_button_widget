@@ -43,7 +43,14 @@ import 'package:on_process_button_widget/on_process_button_widget.dart';
 
 ### Basic Button
 
-`onTap` runs your async operation. Return `true` for success, `false` for error, or `null` to skip status display entirely. If `onTap` throws, the button resets the same way as a `null` result and the error is rethrown afterward, so pair it with your own `try`/`catch` if you want to show an error state instead of just recovering.
+`onTap` runs your async operation. Everything the button does follows from what you return:
+
+| You return | What the user sees | When `onDone` fires |
+|---|---|---|
+| `true` | Success icon (`Icons.done`) for `statusShowingDuration` | after that delay, with `true` |
+| `false` | Error icon (`Icons.error`) for `statusShowingDuration` | after that delay, with `false` |
+| `null` | Nothing — straight back to idle | immediately, with `null` |
+| *(it throws)* | Nothing — straight back to idle | immediately, with `null` |
 
 ```dart
 OnProcessButtonWidget(
@@ -54,6 +61,22 @@ OnProcessButtonWidget(
   child: const Text('Submit'),
 )
 ```
+
+**Handle your own errors inside `onTap`.** If `onTap` throws, the button recovers correctly, but the error is then rethrown so it isn't silently swallowed — meaning it surfaces as an uncaught async error in your app (and will fail your widget tests). If a failure should show the error icon rather than blow up, catch it and return `false`:
+
+```dart
+onTap: () async {
+  try {
+    await api.submitForm(data);
+    return true;
+  } catch (e) {
+    logger.warning('submit failed', e);
+    return false; // shows the error icon
+  }
+},
+```
+
+Return `null` when you want no status feedback at all — a refresh button, or a tap that navigates away.
 
 ### Filled Button (Default)
 
@@ -318,6 +341,60 @@ OnProcessButtonThemeProvider(
   child: MyWidget(),
 )
 ```
+
+> **⚠️ Don't put a `FocusNode` in the theme or the global defaults.** A `FocusNode` is stateful and must belong to a single widget; shared across buttons it misbehaves as soon as two are mounted. Pass `focusNode` per widget.
+
+---
+
+## ⚠️ Behavior Worth Knowing
+
+| Behavior | What to expect |
+|---|---|
+| **Taps during a run are dropped** | While the button is running or showing a status, further taps are ignored. This is a built-in concurrency guard — you don't need your own "already submitting" flag. |
+| **`onDone` is delayed** | On a `true`/`false` result it fires *after* `statusShowingDuration` (default **2s**), not when `onTap` resolves. Use it to chain follow-up work, not for anything latency-sensitive. |
+| **`isRunning: true` doesn't call `onTap`** | It forces the loading visual only. Use it when something *else* drives the loading state. |
+| **`enable: false` disables all press callbacks** | Since 2.1.0 this covers long-press, double-tap, tap up/down/cancel and secondary taps — not just `onTap`. Hover and focus callbacks still fire. It applies no "disabled" styling, so set your own colors if you want it to look disabled. |
+| **`expanded` defaults to `true`** | The button fills the available width. Set `expanded: false` for an intrinsic-width button. |
+| **`autofocus` defaults to `false`** | Changed in 2.1.0 — it used to be `true` and would steal focus from an autofocused `TextField`. Pass `autofocus: true` explicitly if you relied on the old behavior. |
+| **`onStatusChange` may hand you a `null` context** | It fires on every transition, but passes `null` for the `BuildContext` if the widget is gone. Null-check before using it. |
+| **`textStyle` is a full override** | If you pass it, `fontColor` and `fontWeight` no longer apply — fold the color into the `TextStyle`. |
+
+---
+
+## 🧪 Testing App Code That Uses This Button
+
+The status delay is real time in tests, so a bare `pump()` won't reach the end state. Shorten the duration and settle:
+
+```dart
+await tester.pumpWidget(MaterialApp(
+  home: Scaffold(
+    body: OnProcessButtonWidget(
+      statusShowingDuration: const Duration(milliseconds: 10),
+      onTap: () async => true,
+      child: const Text('Submit'),
+    ),
+  ),
+));
+
+await tester.tap(find.text('Submit'));
+await tester.pump();                  // spinner is now showing
+expect(find.byType(CircularProgressIndicator), findsOneWidget);
+await tester.pumpAndSettle();         // runs through success → stable
+```
+
+If the code under test has an `onTap` that throws, the rethrown error reaches the zone and fails the test outright — `tester.takeException()` won't catch it, since that only surfaces errors reported through `FlutterError`. Wrap the interaction:
+
+```dart
+final caught = <Object>[];
+await runZonedGuarded(() async {
+  await tester.tap(find.text('Submit'));
+  await tester.pump();
+}, (Object error, StackTrace stack) => caught.add(error));
+```
+
+Better still, catch inside `onTap` and return `false` so this never comes up.
+
+Note that `OnProcessButtonDefaultValues` is global with no `reset()` — anything a test sets leaks into later tests in the same run, so clear it in `tearDown`.
 
 ---
 

@@ -1,6 +1,6 @@
 # AGENTS.md — OnProcessButtonWidget
 
-> **Using the package in app code?** Read [`doc/using-the-package.md`](doc/using-the-package.md) — the `onTap` return contract, error handling, the rule against styling children, and the behaviors that surprise people.
+> **Using the package in app code?** Read [`README.md`](README.md) — the `onTap` return contract, error handling, the rule against styling children, the "Behavior Worth Knowing" table, and how to test code that uses the button.
 >
 > **Auditing this package, or cutting a release?** Read [`doc/auditing.md`](doc/auditing.md) — the seven bug patterns that have produced confirmed bugs here, and the two Flutter-testing traps that make them easy to mis-verify.
 

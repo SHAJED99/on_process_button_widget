@@ -7,7 +7,7 @@ description: How to correctly use the OnProcessButtonWidget package in app code 
 
 `OnProcessButtonWidget` is an async button: you hand it an `async` callback and it owns the loading spinner, the success/error icon, self-disabling while running, and the animation between those states. Use it where a tap starts work that can succeed or fail. For instant synchronous actions a plain `ElevatedButton` is a better fit — the async lifecycle is the entire point of this widget.
 
-The full consumer guide is [`doc/using-the-package.md`](../../../doc/using-the-package.md); read it when you need detail beyond what's here. The essentials:
+The full consumer guide is [`README.md`](../../../README.md) — styling recipes, the complete property reference, the "Behavior Worth Knowing" table and the testing section. Read it when you need detail beyond what's here. The essentials:
 
 ## The return contract
 
