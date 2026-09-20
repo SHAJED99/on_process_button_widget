@@ -242,6 +242,10 @@ class OnProcessButtonThemeData {
   final TextWidthBasis? textWidthBasis;
 
   /// Focus node for managing keyboard focus.
+  ///
+  /// Prefer setting this per widget. A [FocusNode] is stateful and must belong
+  /// to a single widget, so a node set here is shared by every button under
+  /// this theme and will misbehave as soon as two of them are mounted at once.
   final FocusNode? focusNode;
 
   /// The ink splash factory used by the button.
@@ -270,7 +274,7 @@ class OnProcessButtonThemeData {
     void Function()? onLongPress,
     void Function(BuildContext? context, OnProcessButtonStatus i)?
         onStatusChange,
-    Future<bool?> Function()? onTap,
+    Future<bool?>? Function()? onTap,
     void Function(bool? isSuccess)? onDone,
     void Function(TapUpDetails tapUpDetails)? onTapUp,
     void Function(TapDownDetails tapDownDetails)? onTapDown,
@@ -400,10 +404,10 @@ class OnProcessButtonTheme extends InheritedWidget {
   /// theme data.
   /// The [child] widget is the subtree that will have access to this theme.
   const OnProcessButtonTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The theme data for OnProcessButtonWidget.
   /// This holds all the default values for the button's appearance and
@@ -434,10 +438,10 @@ class OnProcessButtonTheme extends InheritedWidget {
 class OnProcessButtonThemeProvider extends StatelessWidget {
   /// Creates a new instance of [OnProcessButtonThemeProvider] with themeData
   const OnProcessButtonThemeProvider({
-    Key? key,
+    super.key,
     required this.data,
     required this.child,
-  }) : super(key: key);
+  });
 
   /// The theme data for OnProcessButtonWidget.
   /// This holds all the default values for the button's appearance and

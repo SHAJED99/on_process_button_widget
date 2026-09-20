@@ -175,6 +175,10 @@ class OnProcessButtonDefaultValues {
   static TextWidthBasis? textWidthBasis;
 
   /// Focus node for managing keyboard focus.
+  ///
+  /// Prefer setting this per widget. A [FocusNode] is stateful and must belong
+  /// to a single widget, so a node set here is shared by every button in the
+  /// app and will misbehave as soon as two of them are mounted at once.
   static FocusNode? focusNode;
 
   /// The ink splash factory used by the button.

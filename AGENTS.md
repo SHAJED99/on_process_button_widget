@@ -1,5 +1,9 @@
 # AGENTS.md — OnProcessButtonWidget
 
+> **Using the package in app code?** Read [`doc/using-the-package.md`](doc/using-the-package.md) — the `onTap` return contract, error handling, the rule against styling children, and the behaviors that surprise people.
+>
+> **Auditing this package, or cutting a release?** Read [`doc/auditing.md`](doc/auditing.md) — the seven bug patterns that have produced confirmed bugs here, and the two Flutter-testing traps that make them easy to mis-verify.
+
 ## Build & Test Commands
 
 ```bash
@@ -161,9 +165,9 @@ stable → (tap) → running → (result=true) → success → (delay) → stabl
 |---|---|---|---|
 | `expanded` | `bool` | `true` | Fills width when true |
 | `expandedIcon` | `bool?` | `null` | Status icon fills width; falls back to `expanded` |
-| `enable` | `bool?` | `true` | Disabled = `onTap` becomes `null` |
+| `enable` | `bool?` | `true` | Disabled = all tap/press callbacks become `null`; hover/focus still fire |
 | `enableFeedback` | `bool?` | `true` | |
-| `autofocus` | `bool?` | `true` | |
+| `autofocus` | `bool?` | `false` | Competes for focus if enabled on several buttons in one scope |
 | `width` | `double?` | `null` | Fixed width; prefer constraints |
 | `height` | `double?` | `null` | Fixed height; prefer constraints |
 | `constraints` | `BoxConstraints?` | theme button height | Min height derived from `Theme.buttonTheme.height` minus border widths |
@@ -268,7 +272,7 @@ enum OnProcessButtonStatus { stable, running, success, error }
 
 - **Double-tap guard**: If `isRunning != stable`, `onTap` is skipped (prevents concurrent operations).
 - **Null return**: If `onTap` returns `null`, status display is skipped — goes directly back to `stable` with no icon shown.
-- **Exception in onTap**: If `onTap` throws, `result` stays `null` (no icon shown), `onDone(null)` is called, then resets to `stable`.
+- **Exception in onTap**: If `onTap` throws, the error is caught, `result` stays `null` (no icon shown), `onDone(null)` is called, and the button resets to `stable` — then the original error is rethrown via `Error.throwWithStackTrace` so it still surfaces rather than being swallowed. The button always recovers first.
 - **onDone timing**: Called *after* `statusShowingDuration` delay if a result was shown, or immediately after `onTap` if result was `null`.
 - **Manual isRunning**: Setting `widget.isRunning = true` forces the running state but does **not** call `onTap`.
 - **BoxShadow effects**: When `boxShadow` is set, `boxDecoration` uses `Theme.colorScheme.surface` as the background color (Material elevation behavior).

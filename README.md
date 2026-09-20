@@ -5,7 +5,7 @@ A production-ready Flutter button widget with built-in loading animations and st
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=flat&logo=dart&logoColor=white)](https://dart.dev)
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green.svg)](LICENSE)
-[![Pub](https://img.shields.io/badge/pub-v2.0.12-blue.svg)](https://pub.dev/packages/on_process_button_widget)
+[![Pub](https://img.shields.io/badge/pub-v2.1.0-blue.svg)](https://pub.dev/packages/on_process_button_widget)
 
 ---
 
@@ -30,7 +30,7 @@ Or add to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  on_process_button_widget: ^2.0.12
+  on_process_button_widget: ^2.1.0
 ```
 
 ```dart
@@ -43,7 +43,7 @@ import 'package:on_process_button_widget/on_process_button_widget.dart';
 
 ### Basic Button
 
-`onTap` runs your async operation. Return `true` for success, `false` for error, or `null` to skip status display entirely.
+`onTap` runs your async operation. Return `true` for success, `false` for error, or `null` to skip status display entirely. If `onTap` throws, the button resets the same way as a `null` result and the error is rethrown afterward, so pair it with your own `try`/`catch` if you want to show an error state instead of just recovering.
 
 ```dart
 OnProcessButtonWidget(
@@ -421,9 +421,9 @@ stable → (tap) → running → (result=true) → success → (delay) → stabl
 |---|---|---|---|
 | `expanded` | `bool` | `true` | Fills width when true |
 | `expandedIcon` | `bool?` | `null` | Falls back to `expanded` |
-| `enable` | `bool?` | `true` | Disabled = `onTap` becomes `null` |
+| `enable` | `bool?` | `true` | Disabled = all tap/press callbacks become `null`; hover/focus still fire |
 | `enableFeedback` | `bool?` | `true` | |
-| `autofocus` | `bool?` | `true` | |
+| `autofocus` | `bool?` | `false` | Enabling it on several buttons in one focus scope makes them compete for focus |
 | `width` | `double?` | `null` | Prefer constraints |
 | `height` | `double?` | `null` | Prefer constraints |
 | `constraints` | `BoxConstraints?` | theme derived | Min height = `Theme.buttonTheme.height` minus border widths |

@@ -20,7 +20,7 @@ part of '../on_process_button_widget.dart';
 class OnProcessButtonWidget extends StatefulWidget {
   /// Creates an [OnProcessButtonWidget].
   const OnProcessButtonWidget({
-    Key? key,
+    super.key,
     this.enable,
     this.animationDuration,
     this.margin,
@@ -83,7 +83,7 @@ class OnProcessButtonWidget extends StatefulWidget {
     this.fontColor,
     this.animationAlignment,
     this.showRunningStatusWidget,
-  }) : super(key: key);
+  });
 
   /// Called when the button is long-pressed.
   final void Function()? onLongPress;
@@ -163,6 +163,10 @@ class OnProcessButtonWidget extends StatefulWidget {
   final Duration? animationDuration;
 
   /// Whether the button should be focused automatically.
+  ///
+  /// Default: `false`. Enabling it on more than one widget in the same focus
+  /// scope means they compete for focus, and it will take focus away from an
+  /// autofocused [TextField] in the same scope.
   final bool? autofocus;
 
   /// The background color of the button.
@@ -192,7 +196,11 @@ class OnProcessButtonWidget extends StatefulWidget {
   /// Inner padding for the button content.
   final EdgeInsetsGeometry? contentPadding;
 
-  /// Whether the button is interactive. If `false`, `onTap` will not trigger.
+  /// Whether the button is interactive.
+  ///
+  /// When `false`, none of the tap/press callbacks fire ([onTap],
+  /// [onLongPress], [onDoubleTap], the secondary-tap callbacks, etc.). Hover
+  /// and focus callbacks still fire, since those are not activations.
   final bool? enable;
 
   /// Whether to provide haptic/visual feedback on tap.
@@ -302,7 +310,6 @@ class OnProcessButtonWidget extends StatefulWidget {
 class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   late OnProcessButtonStatus isRunning;
   OnProcessButtonThemeData? themeData;
-  bool? result;
 
   late void Function()? onLongPress;
   late void Function(BuildContext? context, OnProcessButtonStatus i)?
@@ -449,7 +456,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
   }
 
   double get _____buttonConstraints {
-    BoxConstraints c = widget.constraints ??
+    BoxConstraints c = constraints ??
         BoxConstraints(
           minHeight: Theme.of(context).buttonTheme.height -
               (border?.top.width ?? 0) -
@@ -460,11 +467,13 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
 
   double get ____contentHeight {
     double f = _____buttonConstraints - contentPadding.vertical;
-    double fontSize = textStyle.fontSize ?? 0;
-    double height = textStyle.height ?? 0;
-    fontSize = MediaQuery.of(context).textScaler.scale(fontSize) -
-        MediaQuery.of(context).textScaler.scale(height);
-    if (f < fontSize) f = fontSize;
+    // TextStyle.height is a multiple of the font size, not a pixel value, so
+    // only the font size goes through the text scaler.
+    double lineHeight = MediaQuery.of(context).textScaler.scale(
+              textStyle.fontSize ?? 0,
+            ) *
+        (textStyle.height ?? 1);
+    if (f < lineHeight) f = lineHeight;
     return f;
   }
 
@@ -498,10 +507,10 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
         child: Material(
           color: backgroundColor,
           child: InkWell(
-            onLongPress: onLongPress,
-            onTapUp: onTapUp,
-            onTapDown: onTapDown,
-            onTapCancel: onTapCancel,
+            onLongPress: enable ? onLongPress : null,
+            onTapUp: enable ? onTapUp : null,
+            onTapDown: enable ? onTapDown : null,
+            onTapCancel: enable ? onTapCancel : null,
             autofocus: autofocus,
             splashColor: splashColor,
             enableFeedback: enableFeedback,
@@ -510,13 +519,13 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
             highlightColor: highlightColor,
             hoverColor: hoverColor,
             mouseCursor: mouseCursor,
-            onDoubleTap: onDoubleTap,
+            onDoubleTap: enable ? onDoubleTap : null,
             onFocusChange: onFocusChange,
-            onHighlightChanged: onHighlightChanged,
-            onSecondaryTap: onSecondaryTap,
-            onSecondaryTapUp: onSecondaryTapUp,
-            onSecondaryTapDown: onSecondaryTapDown,
-            onSecondaryTapCancel: onSecondaryTapCancel,
+            onHighlightChanged: enable ? onHighlightChanged : null,
+            onSecondaryTap: enable ? onSecondaryTap : null,
+            onSecondaryTapUp: enable ? onSecondaryTapUp : null,
+            onSecondaryTapDown: enable ? onSecondaryTapDown : null,
+            onSecondaryTapCancel: enable ? onSecondaryTapCancel : null,
             // overlayColor: widget.overlayColor,
             splashFactory: splashFactory,
             // statesController: widget.statesController,
@@ -534,10 +543,19 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                         OnProcessButtonStatus.running,
                       ); // Running = 1
                     }
+                    bool? result;
+                    Object? caughtError;
+                    StackTrace? caughtStackTrace;
                     if (onTap != null) {
-                      result = await onTap!();
+                      try {
+                        result = await onTap!();
+                      } catch (e, s) {
+                        result = null;
+                        caughtError = e;
+                        caughtStackTrace = s;
+                      }
                       if (result != null) {
-                        if (result! && mounted) {
+                        if (result && mounted) {
                           setState(
                             () => isRunning = OnProcessButtonStatus.success,
                           );
@@ -548,7 +566,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                             ); // Success = 2
                           }
                         }
-                        if (!result! && mounted) {
+                        if (!result && mounted) {
                           setState(
                             () => isRunning = OnProcessButtonStatus.error,
                           );
@@ -575,6 +593,12 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                         OnProcessButtonStatus.stable,
                       );
                     }
+                    if (caughtError != null) {
+                      Error.throwWithStackTrace(
+                        caughtError,
+                        caughtStackTrace!,
+                      );
+                    }
                   },
             child: AnimatedSize(
               alignment: animationAlignment,
@@ -591,7 +615,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
                   height: height,
                   width: width,
                   padding: _____padding,
-                  constraints: widget.constraints ??
+                  constraints: constraints ??
                       BoxConstraints(
                         minWidth: _____buttonConstraints,
                         minHeight: _____buttonConstraints,
@@ -692,7 +716,7 @@ class _OnProcessButtonWidgetState extends State<OnProcessButtonWidget> {
     autofocus = widget.autofocus ??
         themeData?.autofocus ??
         OnProcessButtonDefaultValues.autofocus ??
-        true;
+        false;
     roundBorderWhenRunning = widget.roundBorderWhenRunning ??
         themeData?.roundBorderWhenRunning ??
         OnProcessButtonDefaultValues.roundBorderWhenRunning ??
